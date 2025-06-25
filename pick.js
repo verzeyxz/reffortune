@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const selectionScreen = document.getElementById('selection-screen');
     const resultsScreen = document.getElementById('results-screen');
-    const resultsGrid = document.getElementById('results-grid'); // <<<< เพิ่มบรรทัดที่ขาดไปตรงนี้
+    const resultsGrid = document.getElementById('results-grid');
     const cardGrid = document.getElementById('card-grid');
     const counterDiv = document.getElementById('counter');
     const confirmButton = document.getElementById('confirm-button');
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        renderDeck();
+        renderDeck(); 
 
         await new Promise(resolve => setTimeout(resolve, 200));
         isShuffling = false;
@@ -170,41 +170,86 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- [REPLACED] RENDER DECK FUNCTION FOR TOP-CENTER DOWNWARD ARC ---
     function renderDeck() {
         cardGrid.innerHTML = '';
         const shuffledDeck = shuffle([...tarotDeck]);
-        shuffledDeck.forEach((card, index) => {
-            const cardContainer = document.createElement('div');
-            cardContainer.className = 'card-container';
-            cardContainer.dataset.id = card.id;
-            
-            cardContainer.style.position = 'absolute';
-            cardContainer.style.top = '50%';
-            cardContainer.style.left = '50%';
-            cardContainer.style.transform = 'translate(-50%, -50%) scale(0.8)';
-            cardContainer.style.opacity = '0';
-            cardContainer.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
 
-            const cardBack = document.createElement('div');
-            cardBack.className = 'card-back';
-            cardContainer.appendChild(cardBack);
-            cardContainer.addEventListener('click', () => toggleSelection(card.id));
-            
-            cardGrid.appendChild(cardContainer);
-        });
+        // --- 1. ตรวจสอบขนาดหน้าจอเพื่อปรับค่า ---
+        const screenWidth = window.innerWidth;
+        let settings;
 
-        setTimeout(() => {
-            const cardElements = Array.from(cardGrid.children);
-            cardElements.forEach(card => {
-                card.style.position = '';
-                card.style.top = '';
-                card.style.left = '';
-                card.style.transform = '';
-                card.style.opacity = '1';
+        if (screenWidth < 768) {
+            // -- Mobile Settings --
+            settings = {
+                outerRadius: 280,
+                innerRadius: 180,
+                spreadAngle: 150, 
+                splitPoint: 40
+            };
+        } else {
+            // -- Desktop Settings --
+            settings = {
+                outerRadius: 380,
+                innerRadius: 250,
+                spreadAngle: 160,
+                splitPoint: 40
+            };
+        }
+        
+        // --- 2. แบ่งไพ่ออกเป็น 2 ส่วน ---
+        const outerArcCards = shuffledDeck.slice(0, settings.splitPoint);
+        const innerArcCards = shuffledDeck.slice(settings.splitPoint);
+
+        // --- 3. สร้างฟังก์ชัน Helper เพื่อวาดแถวโค้ง ---
+        const createArc = (cards, radius, spreadAngle) => {
+            const totalCardsInArc = cards.length;
+            const centerAngle = -90; // -90 องศาคือชี้ลงตรงๆ
+            const startAngle = centerAngle - spreadAngle / 2;
+
+            cards.forEach((card, index) => {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'card-container';
+                cardContainer.dataset.id = card.id;
+
+                const cardBack = document.createElement('div');
+                cardBack.className = 'card-back';
+                cardContainer.appendChild(cardBack);
+
+                cardContainer.addEventListener('click', () => toggleSelection(card.id));
+                cardGrid.appendChild(cardContainer);
+                
+                // จุดเริ่มต้น Animation (ที่จุดหมุนด้านบนกลาง)
+                cardContainer.style.transform = `translateX(-50%) translate(0, 0) scale(0)`;
+                cardContainer.style.opacity = '0';
+
+                // คำนวณตำแหน่งและมุมสุดท้าย
+                const anglePerCard = spreadAngle / (totalCardsInArc > 1 ? totalCardsInArc - 1 : 1);
+                const cardAngle = startAngle + (anglePerCard * index);
+                
+                const radian = cardAngle * (Math.PI / 180);
+                
+                // คำนวณตำแหน่ง x, y
+                const x = radius * Math.cos(radian);
+                const y = radius * Math.sin(radian);
+
+                // การ์ดจะหมุนตั้งตรงตามแนวรัศมี
+                const rotation = cardAngle + 90;
+
+                // หน่วงเวลาเพื่อสร้าง Animation
+                setTimeout(() => {
+                    cardContainer.style.opacity = '1';
+                    // เพิ่ม translateX(-50%) เพื่อจัดกึ่งกลางให้สมบูรณ์
+                    cardContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+                }, 100 + (index * 20));
             });
-        }, 50);
+        };
+
+        // --- 4. เรียกใช้งานฟังก์ชันเพื่อวาดทั้ง 2 แถว ---
+        createArc(outerArcCards, settings.outerRadius, settings.spreadAngle);
+        createArc(innerArcCards, settings.innerRadius, settings.spreadAngle);
     }
-    
+
     function renderResults() {
         resultsGrid.innerHTML = '';
         if (maxSelections <= 5) {
@@ -251,11 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if(resetButton) {
         resetButton.addEventListener('click', () => {
-            selectedCards = [];
-            resultsScreen.classList.add('hidden');
-            selectionScreen.classList.remove('hidden');
-            renderDeck();
-            updateUI();
+            window.location.reload();
         });
     }
 
@@ -274,7 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    
     // --- INITIALIZE PAGE ---
     initializePage();
+    window.addEventListener('resize', renderDeck);
 });
