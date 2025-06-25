@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const selectionScreen = document.getElementById('selection-screen');
     const resultsScreen = document.getElementById('results-screen');
+    const resultsGrid = document.getElementById('results-grid'); // <<<< เพิ่มบรรทัดที่ขาดไปตรงนี้
     const cardGrid = document.getElementById('card-grid');
     const counterDiv = document.getElementById('counter');
     const confirmButton = document.getElementById('confirm-button');
@@ -44,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cardElements = Array.from(cardGrid.children);
 
-        // Animate cards gathering to the center
         cardElements.forEach((card, index) => {
             card.classList.add('gathering');
             const randomX = Math.random() * 20 - 10;
@@ -56,12 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await new Promise(resolve => setTimeout(resolve, 600));
 
-        // Animate the stack fading away
         cardElements.forEach(card => card.classList.add('hiding'));
         
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Re-render the deck with new positions
         renderDeck();
 
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -256,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedCards = [];
             resultsScreen.classList.add('hidden');
             selectionScreen.classList.remove('hidden');
-            // Re-render deck instead of just hiding UI for a fresh start
             renderDeck();
             updateUI();
         });
