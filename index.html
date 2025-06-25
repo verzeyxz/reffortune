@@ -18,7 +18,8 @@
     <meta property="twitter:title" content="ดูดวงกับเรฟ - ศาสตร์แห่งไพ่และจักรวาล" />
     <meta property="twitter:description" content="บริการดูดวงไพ่ทาโรต์, ไพ่ออราเคิล, โหราศาสตร์ และมหาสัตตเลข พร้อมแพ็กเกจที่เหมาะกับคุณ" />
     <meta property="twitter:image" content="https://i.postimg.cc/Gt6hFf1C/510410056-1025781239715126-7563405935526078934-n.jpg" />
-    
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +41,36 @@
         background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center;
         z-index: -2;
         }
+
+.swal2-popup {
+            background-color: #111111 !important;
+            border: 2px solid #FBBF24 !important;
+            border-radius: 1rem !important;
+        }
+        .swal2-title {
+            color: #FBBF24 !important;
+        }
+        .swal2-html-container {
+            color: #D1D5DB !important;
+        }
+        .swal-card-option {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #FBBF24;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            color: #FBBF24;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .swal-card-option:hover {
+            background-color: #FBBF24;
+            color: #111111;
+        }
+
         .twinkling {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center;
@@ -371,11 +402,10 @@
                 <p class="text-center text-gray-300 mb-8">เลือกรูปแบบการเปิดไพ่ที่คุณต้องการ</p>
                 <div class="grid md:grid-cols-1 gap-6">
                     <div id="start-game-button"></div>
-                    <a href="pick.html" class="menu-card-item">
-                        <h4>เลือกไพ่ชุดใหญ่ 10 ใบ</h4>
-                        <p class="mt-2">สำหรับผู้ที่ต้องการดูภาพรวมสถานการณ์ที่ซับซ้อนด้วยตัวเอง</p>
-                    </a>
-                </div>
+                        <div id="open-pick-modal-btn" class="menu-card-item cursor-pointer">
+                                <h4>เลือกไพ่</h4>
+                                <p class="mt-2"> เปิดไพ่ดวงชะตาตัวคุณเอง</p>
+                            </div>
             </div>
         </section>
         
@@ -693,5 +723,30 @@
 
         // --- All other existing JavaScript code... ---
     </script>
+    <script>
+        // --- All other existing JS for index.html ---
+        
+        // --- NEW SCRIPT FOR SELECTION MODAL ---
+        const openPickModalBtn = document.getElementById('open-pick-modal-btn');
+        openPickModalBtn.addEventListener('click', () => {
+            Swal.fire({
+                title: 'เลือกจำนวนไพ่',
+                html: `
+                    <p class="mb-4">คุณต้องการเปิดไพ่เพื่อดูคำทำนายกี่ใบ?</p>
+                    <div class="flex flex-col">
+                     <a href="pick.html?count=1" class="swal-card-option">1 ใบ  (1 card)</a>
+                     <a href="pick.html?count=2" class="swal-card-option">2 ใบ  (2 card)</a>
+                        <a href="pick.html?count=3" class="swal-card-option">3 ใบ  (3 card)</a>
+                        <a href="pick.html?count=4" class="swal-card-option">4 ใบ  (4 card)</a>
+
+                        <a href="pick.html?count=10" class="swal-card-option">10 ใบ  (10 card)</a>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+            });
+        });
+    </script>
+
     </body>
     </html>
