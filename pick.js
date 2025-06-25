@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (screenWidth < 768) {
             // -- Mobile Settings --
             settings = {
-                outerRadius: 240, // ลดขนาด
+                outerRadius: 200, // ลดขนาด
                 innerRadius: 150, // ลดขนาด
                 spreadAngle: 150, 
                 splitPoint: 40
