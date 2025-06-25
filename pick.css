@@ -1,4 +1,4 @@
-/* --- THEME & BACKGROUND (เหมือนเดิม) --- */
+/* --- THEME & BACKGROUND --- */
 body {
     font-family: 'Noto Sans Thai', sans-serif;
     background-color: #100a33;
@@ -25,6 +25,8 @@ body {
     position: relative;
     z-index: 10;
 }
+
+/* ================== UPDATED STYLES FOR CONTROLS ================== */
 .controls-container {
     position: sticky;
     top: 1rem;
@@ -32,9 +34,77 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
     margin-bottom: 2rem;
+    border-radius: 1rem; /* ทำให้ขอบมนสวยงาม */
 }
+.selection-tray-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 80px; /* เพิ่มความสูงของถาด */
+    flex-grow: 1;
+}
+.tray-card {
+    position: absolute;
+    width: 54px; /* เพิ่มขนาดไพ่จิ๋ว */
+    aspect-ratio: 2/3;
+    background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
+    background-size: cover;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    border: 2px solid #A78BFA; /* เพิ่มขอบสีม่วง */
+    filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.5)); /* เพิ่ม Glow */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+}
+.tray-card.in-tray {
+    opacity: 1;
+    transform: translateY(0);
+}
+.tray-card:hover {
+    transform: translateY(-8px) scale(1.1);
+    z-index: 100; /* ให้ไพ่ที่ hover อยู่บนสุดเสมอ */
+}
+.counter-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #E9D5FF;
+    white-space: nowrap; /* ป้องกันการตัดคำ */
+}
+.confirm-btn {
+    background-color: #8B5CF6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+.confirm-btn:hover:not(:disabled) {
+    background-color: #A78BFA;
+    transform: scale(1.05);
+}
+.confirm-btn:disabled {
+    background-color: #374151; /* สีเทาเข้ม */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+/* NEW: Pulse animation for ready button */
+.confirm-btn.ready {
+    animation: pulse-glow 2s infinite;
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(167, 139, 250, 0); }
+    50% { box-shadow: 0 0 20px rgba(196, 181, 253, 0.7); }
+}
+
+/* =================================================================== */
+
 
 /* --- CARD GRID & STYLES --- */
 .card-grid-container {
@@ -62,170 +132,38 @@ body {
 }
 .card-container.selected .card-back {
     border-color: #C4B5FD;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(1.02);
     box-shadow: 0 10px 20px rgba(196, 181, 253, 0.5);
-}
-/* --- UPDATED CONTROLS & NEW SELECTION TRAY --- */
-.controls-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1.5rem; /* ปรับ Padding */
-    margin-bottom: 2rem;
-    position: sticky;
-    top: 1rem;
-    z-index: 20;
-}
-
-.selection-tray-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 60px; /* กำหนดความสูงของถาด */
-    flex-grow: 1; /* ให้ถาดขยายเต็มพื้นที่ */
-}
-
-.tray-card {
-    position: absolute;
-    width: 40px; /* ขนาดไพ่จิ๋ว */
-    aspect-ratio: 2/3;
-    background-image: url(https://i.postimg.cc/DZnx1m8c/tarot-cards-mystical-poster-meta.webp);
-    background-size: cover;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    opacity: 0; /* เริ่มต้นให้โปร่งใส */
-    transform: translateY(20px); /* เริ่มต้นให้อยู่ต่ำกว่าปกติเล็กน้อย */
-}
-/* ... All previous CSS code ... */
-
-/* --- UPDATED RESULTS SCREEN STYLES --- */
-#results-screen {
-    /* เพิ่มพื้นหลังให้ส่วนนี้ เพื่อให้รูปที่ save ออกมาสวยงาม */
-    background: rgba(15, 7, 85, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
-    padding: 2rem;
-    backdrop-filter: blur(5px);
-}
-.results-grid-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, auto);
-    gap: 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/* ... existing result-card styles ... */
-
-/* --- NEW BUTTON STYLE for Saving --- */
-.save-btn {
-    background-color: #10B981; /* Green color */
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    font-weight: bold;
-    border: none;
-    transition: all 0.3s ease;
-}
-.save-btn:hover {
-    background-color: #34D399;
-    transform: scale(1.05);
-}
-
-
-/* Animation for when card is added to tray */
-.tray-card.in-tray {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.tray-card:hover {
-    transform: translateY(-5px) scale(1.1);
-    z-index: 10; /* ทำให้ไพ่ที่ hover อยู่บนสุด */
-}
-/* --- CONTROLS --- */
-.counter-text {
-    font-size: 1.125rem;
-    font-weight: bold;
-    color: #E9D5FF;
-}
-.confirm-btn {
-    background-color: #8B5CF6;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    font-weight: bold;
-    border: none;
-    transition: all 0.3s ease;
-}
-.confirm-btn:hover:not(:disabled) {
-    background-color: #A78BFA;
-    transform: scale(1.05);
-}
-.confirm-btn:disabled {
-    background-color: #4B5563;
-    cursor: not-allowed;
     opacity: 0.7;
 }
 
-.results-grid-container {
-    display: grid;
-    /* สร้าง Grid 5 คอลัมน์ */
-    grid-template-columns: repeat(5, 1fr);
-    /* สร้าง Grid 2 แถว */
-    grid-template-rows: repeat(2, auto);
-    gap: 1.5rem;
-    max-width: 1000px; /* จำกัดความกว้างสูงสุดบนจอใหญ่ */
-    margin: 0 auto; /* จัดกลาง */
-}
-
-.result-card {
-    text-align: center;
-    animation: fadeIn 0.5s ease-out forwards;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.result-card:hover {
-    transform: scale(1.07);
-}
-
+/* --- RESULTS SCREEN & MODAL STYLES --- */
+#results-screen { background: rgba(15, 7, 85, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(5px); }
+.results-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, auto); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+.result-card { text-align: center; animation: fadeIn 0.5s ease-out forwards; cursor: pointer; transition: transform 0.3s ease; }
+.result-card:hover { transform: scale(1.07); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.result-card img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+.result-card p { margin-top: 0.75rem; font-weight: bold; color: #E9D5FF; font-size: 0.875rem; }
+.save-btn { background-color: #10B981; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: bold; border: none; transition: all 0.3s ease; }
+.save-btn:hover { background-color: #34D399; transform: scale(1.05); }
+#card-modal-container.visible { opacity: 1; pointer-events: auto; }
+#card-modal-container.visible #card-modal-panel { transform: scale(1); }
 
-.result-card img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    .selection-tray-container {
+        width: 100%;
+        justify-content: center;
+    }
 }
-
-.result-card p {
-    margin-top: 0.75rem;
-    font-weight: bold;
-    color: #E9D5FF;
-    font-size: 0.875rem; /* ลดขนาดตัวอักษรเล็กน้อย */
-}
-
-/* --- RESPONSIVE for 5x2 Grid --- */
 @media (max-width: 640px) {
-    .results-grid-container {
-        gap: 0.75rem; /* ลดช่องว่างบนมือถือ */
-    }
-    .result-card p {
-        font-size: 0.7rem; /* ลดขนาดตัวอักษรบนมือถือ */
-        margin-top: 0.5rem;
-    }
-}
-
-/* --- CARD DETAIL MODAL STYLES --- */
-#card-modal-container.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-#card-modal-container.visible #card-modal-panel {
-    transform: scale(1);
+    .card-grid-container { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 0.75rem; }
+    .results-grid-container { gap: 0.75rem; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto; } /* ปรับเป็น 5 คอลัมน์บนมือถือ */
+    .result-card p { font-size: 0.7rem; margin-top: 0.5rem; }
 }
