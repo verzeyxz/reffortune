@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsScreen = document.getElementById('results-screen');
     const resultsGrid = document.getElementById('results-grid');
     const selectionTray = document.getElementById('selection-tray');
-    const saveImageBtn = document.getElementById('save-image-btn'); // New Button
+    const saveImageBtn = document.getElementById('save-image-btn');
 
-    // Modal elements...
+    // --- Modal Elements ---
     const cardModalContainer = document.getElementById('card-modal-container');
     const modalCloseBtn = document.getElementById('modal-close-btn');
 
@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- SAVE RESULT AS IMAGE FUNCTION ---
     async function saveResultsAsImage() {
-        // Show loading alert
         Swal.fire({
             title: 'กำลังสร้างรูปภาพ...',
             text: 'โปรดรอสักครู่',
@@ -31,23 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            // Target the entire results screen for capture
             const elementToCapture = document.getElementById('results-screen');
             const canvas = await html2canvas(elementToCapture, {
-                useCORS: true, // Important for external images
-                backgroundColor: 'rgba(15, 7, 85, 0)', // Use the background from CSS
-                scale: 2 // Increase resolution for better quality
+                useCORS: true,
+                backgroundColor: null, // Let CSS background show through
+                scale: 2
             });
             
             const imageDataUrl = canvas.toDataURL('image/png');
 
-            Swal.close(); // Close loading alert
+            Swal.close();
 
-            // Show success alert with download button
             const result = await Swal.fire({
                 title: 'สร้างรูปภาพสำเร็จ!',
                 text: 'คลิก "บันทึก" เพื่อดาวน์โหลดรูปภาพของคุณ',
-                imageUrl: imageDataUrl, // Show a preview in the alert
+                imageUrl: imageDataUrl,
                 imageAlt: 'ผลการเลือกไพ่',
                 imageHeight: 200,
                 showCancelButton: true,
@@ -58,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (result.isConfirmed) {
-                // Create a temporary link to trigger the download
                 const link = document.createElement('a');
                 link.href = imageDataUrl;
                 link.download = `ผลคำทำนาย-ดูดวงกับเรฟ-${Date.now()}.png`;
@@ -77,18 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-    // --- All other functions (modal, selection, UI, rendering) remain the same ---
+    // --- CARD DETAIL MODAL LOGIC ---
     function openCardModal(cardId) {
         const cardData = tarotDeck.find(c => c.id === cardId);
         if (!cardData) return;
+
         document.getElementById('modal-card-img').src = cardData.img;
         document.getElementById('modal-card-name').textContent = cardData.name;
         cardModalContainer.classList.add('visible');
     }
-    function closeCardModal() { cardModalContainer.classList.remove('visible'); }
+
+    function closeCardModal() {
+        cardModalContainer.classList.remove('visible');
+    }
+
+    // --- SELECTION LOGIC ---
     function toggleSelection(cardId) {
         const cardInGrid = document.querySelector(`.card-container[data-id="${cardId}"]`);
+
         if (selectedCards.includes(cardId)) {
             selectedCards = selectedCards.filter(id => id !== cardId);
             if(cardInGrid) cardInGrid.classList.remove('selected');
@@ -96,26 +98,54 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedCards.length < MAX_SELECTIONS) {
                 selectedCards.push(cardId);
                 if(cardInGrid) cardInGrid.classList.add('selected');
-            } else { alert('คุณเลือกไพ่ครบ 10 ใบแล้ว'); }
+            } else {
+                Swal.fire({
+                    title: 'เลือกครบแล้ว',
+                    text: 'คุณเลือกไพ่ครบ 10 ใบแล้ว',
+                    icon: 'info'
+                });
+            }
         }
         updateUI();
     }
-    function handleCardClick(event) { toggleSelection(event.currentTarget.dataset.id); }
+    
+    function handleCardClick(event) {
+        toggleSelection(event.currentTarget.dataset.id);
+    }
+
+    // --- UI RENDERING ---
     function updateUI() {
         counterDiv.textContent = `เลือกแล้ว ${selectedCards.length}/${MAX_SELECTIONS} ใบ`;
-        confirmButton.disabled = selectedCards.length !== MAX_SELECTIONS;
+        
+        if (selectedCards.length === MAX_SELECTIONS) {
+            confirmButton.disabled = false;
+            confirmButton.classList.add('ready');
+        } else {
+            confirmButton.disabled = true;
+            confirmButton.classList.remove('ready');
+        }
+
         selectionTray.innerHTML = '';
         selectedCards.forEach((cardId, index) => {
             const trayCard = document.createElement('div');
             trayCard.className = 'tray-card';
             trayCard.dataset.id = cardId;
-            trayCard.style.left = `${index * 25}px`;
+            trayCard.style.left = `${index * 35}px`;
             trayCard.style.zIndex = index;
-            trayCard.addEventListener('click', (e) => { e.stopPropagation(); toggleSelection(cardId); });
+
+            trayCard.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSelection(cardId);
+            });
+            
             selectionTray.appendChild(trayCard);
-            setTimeout(() => { trayCard.classList.add('in-tray'); }, 10 * index);
+
+            setTimeout(() => {
+                trayCard.classList.add('in-tray');
+            }, 10 * index);
         });
     }
+
     function renderDeck() {
         cardGrid.innerHTML = '';
         const shuffledDeck = shuffle([...tarotDeck]);
@@ -130,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cardGrid.appendChild(cardContainer);
         });
     }
+    
     function renderResults() {
         resultsGrid.innerHTML = '';
         selectedCards.forEach((cardId, index) => {
@@ -142,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsGrid.appendChild(resultCard);
         });
     }
+
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
         while (currentIndex !== 0) {
@@ -160,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderResults();
         }
     });
+
     resetButton.addEventListener('click', () => {
         selectedCards = [];
         resultsScreen.classList.add('hidden');
@@ -167,10 +200,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.card-container.selected').forEach(el => el.classList.remove('selected'));
         updateUI();
     });
-    saveImageBtn.addEventListener('click', saveResultsAsImage); // New listener
+
+    saveImageBtn.addEventListener('click', saveResultsAsImage);
+    
     modalCloseBtn.addEventListener('click', closeCardModal);
-    cardModalContainer.addEventListener('click', (event) => { if (event.target === cardModalContainer) closeCardModal(); });
-    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && cardModalContainer.classList.contains('visible')) closeCardModal(); });
+    cardModalContainer.addEventListener('click', (event) => {
+        if (event.target === cardModalContainer) {
+            closeCardModal();
+        }
+    });
+    
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && cardModalContainer.classList.contains('visible')) {
+            closeCardModal();
+        }
+    });
 
     // --- INITIALIZE ---
     renderDeck();
