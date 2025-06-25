@@ -162,7 +162,7 @@ body {
 
 @media (max-width: 480px) {
     .card-container {
-        width: 70px@;
+        width: 60px@;
         top: 255px;
     }
 }
