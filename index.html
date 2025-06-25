@@ -140,7 +140,36 @@
         .service-popup-panel {
         transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+   /* --- NEW: BLACK & GOLD CARD MENU --- */
+    .menu-gold-theme {
+      background-color: #111111;
+      border: 2px solid #FBBF24; /* gold-400 */
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.3);
+    }
+    .menu-card-item {
+      background-color: rgba(17, 17, 17, 0.6);
+      border: 1px solid #FBBF24; /* gold-400 */
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+    .menu-card-item:hover {
+      transform: translateY(-10px);
+      background-color: #1f1f1f;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+    }
+    .menu-card-item h4 {
+      color: #FBBF24; /* gold-400 */
+      font-size: 1.25rem; /* text-xl */
+      font-weight: bold;
+    }
+    .menu-card-item p {
+      color: #D1D5DB; /* gray-300 */
+      font-size: 0.875rem; /* text-sm */
+    }
         /* --  /* --- FLOATING ACTION BUTTON (FAB) STYLES --- */
         .fab-container {
             position: fixed;
@@ -271,7 +300,20 @@
                 <p class="text-white/70">ศาสตร์แห่งตัวเลขจากวันเกิดและชื่อ เพื่อค้นพบเส้นทางชีวิตที่เหมาะสม</p>
             </div>
             </div>
-            
+             <section class="py-12 reveal-item">
+            <div class="menu-gold-theme">
+                <h3 class="text-3xl font-bold text-amber-300 mb-2 text-center" style="text-shadow: 0 0 8px rgba(252, 211, 77, 0.5);">เข้าสู่เมนูเลือกการ์ด</h3>
+                <p class="text-center text-gray-300 mb-8">เลือกรูปแบบการเปิดไพ่ที่คุณต้องการ</p>
+                <div class="grid md:grid-cols-1 gap-6">
+                    <div id="start-game-button"></div>
+                    <a href="pick.html" class="menu-card-item">
+                        <h4>เลือกไพ่ชุดใหญ่ 10 ใบ</h4>
+                        <p class="mt-2">สำหรับผู้ที่ต้องการดูภาพรวมสถานการณ์ที่ซับซ้อนด้วยตัวเอง</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
             <section class="py-12 reveal-item">
             <h2 class="text-4xl font-bold text-glow mb-4">แพ็กเกจดูดวงกับเรฟ</h2>
             <div class="text-center mb-8 max-w-2xl mx-auto">
@@ -349,17 +391,7 @@
             </div>
             </section>
 
-<section class="py-12 reveal-item">
-    <h3 class="text-3xl font-bold mb-6">อยากลองเปิดไพ่รับคำแนะนำไหม?</h3>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button id="start-game-button" class="bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 text-lg">
-            เปิดไพ่แนะนำ 1 ใบ
-        </button>
-        <a href="pick.html" class="bg-transparent border-2 border-purple-400 hover:bg-purple-400 hover:text-white text-purple-300 font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 text-lg">
-            เลือกไพ่ชุดใหญ่ 10 ใบ
-        </a>
-    </div>
-</section>
+
             
             <footer class="py-12 border-t border-white/10 reveal-item">
             <p class="text-lg text-green-300 mb-4">ทุกยอดดูดวง ร่วมทำบุญ 10% เสริมบุญให้ลูกดวงทุกคน</p>
@@ -606,23 +638,7 @@
         });
 
         // --- NUMEROLOGY CALCULATOR LOGIC ---
-        const calculateBtn = document.getElementById('calculate-btn');
-        const birthdateInput = document.getElementById('birthdate-input');
-        const resultDiv = document.getElementById('numerology-result');
-
-        const lifePathInfo = {
-            1: "คุณคือผู้นำ (The Leader): มีความคิดริเริ่ม เป็นอิสระ และมุ่งมั่นสู่ความสำเร็จ",
-            2: "คุณคือผู้ประสาน (The Mediator): อ่อนโยน เห็นอกเห็นใจผู้อื่น และเป็นนักการทูตโดยธรรมชาติ",
-            3: "คุณคือนักสื่อสาร (The Communicator): มีความคิดสร้างสรรค์ เก่งในการแสดงออก และรักการเข้าสังคม",
-            4: "คุณคือผู้สร้าง (The Builder): มีความมั่นคง ขยันขันแข็ง และเป็นคนที่ไว้ใจได้",
-            5: "คุณคือผู้นิยมอิสระ (The Freedom Seeker): รักการผจญภัย ปรับตัวเก่ง และไม่ชอบความจำเจ",
-            6: "คุณคือผู้ดูแล (The Nurturer): มีความรับผิดชอบสูง รักครอบครัว และชอบดูแลผู้อื่น",
-            7: "คุณคือนักแสวงหา (The Seeker): ฉลาด ช่างสังเกต ชอบวิเคราะห์ และรักการค้นหาความจริง",
-            8: "คุณคือผู้มีอำนาจ (The Powerhouse): มีความทะเยอทะยาน เก่งเรื่องบริหารจัดการ และมีเป้าหมายที่ยิ่งใหญ่",
-            9: "คุณคือผู้มีมนุษยธรรม (The Humanitarian): ใจกว้าง มีเมตตา และมีความคิดเพื่อส่วนรวม",
-            11: "คุณคือผู้มีแรงบันดาลใจ (The Inspired): มีลางสังหรณ์ที่แม่นยำ และมีพลังในการชี้นำผู้คน (Master Number)",
-            22: "คุณคือผู้สร้างสรรค์ที่ยิ่งใหญ่ (The Master Builder): มีศักยภาพในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืน (Master Number)"
-        };
+   
 
     
     const zodiacSelector = document.getElementById('zodiac-selector');
