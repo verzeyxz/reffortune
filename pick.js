@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedCards = [];
     let maxSelections = 10;
     let isShuffling = false;
+    let renderTimeout; // สำหรับ debounce resize event
 
     // --- CORE LOGIC: Initialize page based on URL parameter ---
     function initializePage() {
@@ -35,37 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- SHUFFLE ANIMATION FUNCTIONALITY ---
     async function handleShuffleClick() {
-        if (isShuffling) return;
-        isShuffling = true;
-
         shuffleButton.disabled = true;
-        confirmButton.disabled = true;
         selectedCards = [];
         updateUI();
 
-        const cardElements = Array.from(cardGrid.children);
+        cardGrid.style.transition = 'opacity 0.3s ease-out';
+        cardGrid.style.opacity = '0';
 
-        cardElements.forEach((card, index) => {
-            card.classList.add('gathering');
-            const randomX = Math.random() * 20 - 10;
-            const randomY = Math.random() * 20 - 10;
-            const randomRot = Math.random() * 40 - 20;
-            card.style.transform = `translate(-50%, -50%) translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
-            card.style.zIndex = index;
-        });
-
-        await new Promise(resolve => setTimeout(resolve, 600));
-
-        cardElements.forEach(card => card.classList.add('hiding'));
-        
         await new Promise(resolve => setTimeout(resolve, 300));
-
+        
         renderDeck(); 
 
-        await new Promise(resolve => setTimeout(resolve, 200));
-        isShuffling = false;
+        cardGrid.style.opacity = '1';
         shuffleButton.disabled = false;
-        updateUI();
     }
     
     // --- SAVE RESULT AS IMAGE FUNCTION ---
@@ -170,84 +153,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- [REPLACED] RENDER DECK FUNCTION FOR TOP-CENTER DOWNWARD ARC ---
+    // --- [REPLACED] RENDER DECK FUNCTION FOR RESPONSIVE STAGGERED LAYOUT ---
     function renderDeck() {
-        cardGrid.innerHTML = '';
+        cardGrid.innerHTML = ''; 
         const shuffledDeck = shuffle([...tarotDeck]);
+        const containerWidth = cardGrid.offsetWidth;
 
-        // --- 1. ตรวจสอบขนาดหน้าจอเพื่อปรับค่า ---
-        const screenWidth = window.innerWidth;
-        let settings;
+        // --- ค่าที่ปรับได้สำหรับ Layout ---
+        const cardsPerRow = 19;
+        let cardWidth, overlapX, rowHeight;
 
-        if (screenWidth < 768) {
-            // -- Mobile Settings --
-            settings = {
-                outerRadius: 200, // ลดขนาด
-                innerRadius: 150, // ลดขนาด
-                spreadAngle: 150, 
-                splitPoint: 40
-            };
-        } else {
-            // -- Desktop Settings --
-            settings = {
-                outerRadius: 320, // ลดขนาด
-                innerRadius: 210, // ลดขนาด
-                spreadAngle: 160,
-                splitPoint: 40
-            };
+        // --- กำหนดค่าตามขนาดหน้าจอ ---
+        if (containerWidth < 768) { // Mobile
+            // บนมือถือ ทำให้การ์ดมีขนาดเล็กลงและซ้อนกันมากขึ้นเพื่อให้พอดี
+            cardWidth = containerWidth / 8; // ขนาดการ์ดเป็นสัดส่วนของความกว้างจอ
+            overlapX = cardWidth * 0.4; // ซ้อนกัน 60% ของความกว้างการ์ด
+            rowHeight = cardWidth * (3/2) * 0.6; // ลดความสูงแถวให้ชิดกันขึ้น
+        } else { // Desktop
+            cardWidth = 90;
+            overlapX = 40;
+            rowHeight = 150;
         }
-        
-        // --- 2. แบ่งไพ่ออกเป็น 2 ส่วน ---
-        const outerArcCards = shuffledDeck.slice(0, settings.splitPoint);
-        const innerArcCards = shuffledDeck.slice(settings.splitPoint);
 
-        // --- 3. สร้างฟังก์ชัน Helper เพื่อวาดแถวโค้ง ---
-        const createArc = (cards, radius, spreadAngle) => {
-            const totalCardsInArc = cards.length;
-            const centerAngle = -90; // -90 องศาคือชี้ลงตรงๆ
-            const startAngle = centerAngle - spreadAngle / 2;
+        // คำนวณความกว้างทั้งหมดของแถวไพ่เพื่อจัดให้อยู่กึ่งกลาง
+        const totalRowWidth = (cardsPerRow - 1) * overlapX + cardWidth;
+        const startOffset = (containerWidth - totalRowWidth) / 2;
 
-            cards.forEach((card, index) => {
-                const cardContainer = document.createElement('div');
-                cardContainer.className = 'card-container';
-                cardContainer.dataset.id = card.id;
+        shuffledDeck.forEach((card, index) => {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'card-container';
+            cardContainer.dataset.id = card.id;
 
-                const cardBack = document.createElement('div');
-                cardBack.className = 'card-back';
-                cardContainer.appendChild(cardBack);
+            // คำนวณแถวและคอลัมน์
+            const row = Math.floor(index / cardsPerRow);
+            const col = index % cardsPerRow;
 
-                cardContainer.addEventListener('click', () => toggleSelection(card.id));
-                cardGrid.appendChild(cardContainer);
-                
-                // จุดเริ่มต้น Animation (ที่จุดหมุนด้านบนกลาง)
-                cardContainer.style.transform = `translateX(-50%) translate(0, 0) scale(0)`;
-                cardContainer.style.opacity = '0';
+            // คำนวณตำแหน่ง
+            const top = row * rowHeight;
+            const left = startOffset + (col * overlapX);
+            
+            // กำหนดสไตล์จาก JavaScript
+            cardContainer.style.width = `${cardWidth}px`;
+            cardContainer.style.top = `${top}px`;
+            cardContainer.style.left = `${left}px`;
+            cardContainer.style.zIndex = col;
+            cardContainer.style.animationDelay = `${index * 20}ms`;
 
-                // คำนวณตำแหน่งและมุมสุดท้าย
-                const anglePerCard = spreadAngle / (totalCardsInArc > 1 ? totalCardsInArc - 1 : 1);
-                const cardAngle = startAngle + (anglePerCard * index);
-                
-                const radian = cardAngle * (Math.PI / 180);
-                
-                // คำนวณตำแหน่ง x, y
-                const x = radius * Math.cos(radian);
-                const y = radius * Math.sin(radian);
+            const cardBack = document.createElement('div');
+            cardBack.className = 'card-back';
+            cardContainer.appendChild(cardBack);
 
-                // การ์ดจะหมุนตั้งตรงตามแนวรัศมี
-                const rotation = cardAngle + 90;
-
-                // หน่วงเวลาเพื่อสร้าง Animation
-                setTimeout(() => {
-                    cardContainer.style.opacity = '1';
-                    // เพิ่ม translateX(-50%) เพื่อจัดกึ่งกลางให้สมบูรณ์
-                    cardContainer.style.transform = `translateX(-50%) translate(${x}px, ${y}px) rotate(${rotation}deg)`;
-                }, 100 + (index * 20));
-            });
-        };
-
-        // --- 4. เรียกใช้งานฟังก์ชันเพื่อวาดทั้ง 2 แถว ---
-        createArc(outerArcCards, settings.outerRadius, settings.spreadAngle);
-        createArc(innerArcCards, settings.innerRadius, settings.spreadAngle);
+            cardContainer.addEventListener('click', () => toggleSelection(card.id));
+            
+            cardGrid.appendChild(cardContainer);
+        });
     }
 
     function renderResults() {
@@ -318,5 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- INITIALIZE PAGE ---
     initializePage();
-    window.addEventListener('resize', renderDeck);
+    // เพิ่ม Event Listener เพื่อ re-render เมื่อมีการปรับขนาดหน้าจอ
+    window.addEventListener('resize', () => {
+        // Debounce: รอ 250ms หลังจากการปรับขนาดครั้งสุดท้ายก่อนจะ render ใหม่
+        // เพื่อป้องกันการ render ที่ถี่เกินไป
+        clearTimeout(renderTimeout);
+        renderTimeout = setTimeout(renderDeck, 250);
+    });
 });
