@@ -203,12 +203,46 @@
       .card { width: 90px; height: 135px; }
       .card-wrapper:hover { transform: none; }
     }
+    /* --- MAGIC CURSOR --- */
+    .magic-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: #c4bfff;
+        border-radius: 50%;
+        z-index: 1000;
+        pointer-events: none;
+        box-shadow: 0 0 10px #c4bfff, 0 0 20px #c4bfff, 0 0 30px #8b80ff;
+        transition: transform 0.2s ease-out, opacity 0.3s ease;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    .magic-cursor.hover {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.7;
+        }
+/* --- ZODIAC FEATURE STYLES --- */
+    .zodiac-icon {
+        transition: all 0.3s ease-in-out;
+        opacity: 0.6;
+    }
+    .zodiac-icon:hover {
+        opacity: 1;
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 10px #A78BFA);
+    }
+    .zodiac-icon.active {
+        opacity: 1;
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 15px #C4B5FD);
+    }
+
   </style>
 </head>
 <body class="space-bg">
   <div class="stars"></div>
   <div class="twinkling"></div>
   <div class="planet"></div>
+  <div id="magic-cursor" class="magic-cursor"></div>
   
   <div class="relative z-10">
     <div id="intro-section" class="container mx-auto max-w-4xl text-center px-4">
@@ -301,6 +335,22 @@
             </div>
           </div>
         </section>
+<section class="py-12 reveal-item">
+          <div class="glass-box p-8">
+              <h3 class="text-3xl font-bold text-glow mb-4">สำรวจดวงดาวประจำราศีของคุณ</h3>
+              <p class="text-white/80 mb-8 max-w-xl mx-auto">เลือกราศีเกิดของคุณเพื่อดู "พลังงานด้านบวก" และ "เรื่องที่ควรโฟกัส" ประจำวันนี้</p>
+              
+              <div id="zodiac-selector" class="grid grid-cols-4 md:grid-cols-6 gap-4 max-w-lg mx-auto mb-8">
+                  </div>
+              
+              <div id="zodiac-result" class="min-h-[6rem] text-center transition-all duration-500 bg-black/20 rounded-lg p-4">
+                  <p class="text-gray-400">โปรดเลือกราศีของคุณจากไอคอนด้านบน</p>
+              </div>
+          </div>
+        </section>
+
+
+
         <section class="py-12 reveal-item">
           <h3 class="text-3xl font-bold mb-6">อยากลองเปิดไพ่รับคำแนะนำไหม?</h3>
           <button id="start-game-button" class="bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 text-lg">
@@ -540,6 +590,84 @@
             fabContainer.classList.remove('open');
         }
     })
+
+    // --- MAGIC CURSOR LOGIC ---
+    const magicCursor = document.getElementById('magic-cursor');
+    document.addEventListener('mousemove', (e) => {
+        magicCursor.style.left = e.clientX + 'px';
+        magicCursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, [onclick], .cursor-pointer').forEach(el => {
+        el.addEventListener('mouseenter', () => magicCursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => magicCursor.classList.remove('hover'));
+    });
+
+    // --- NUMEROLOGY CALCULATOR LOGIC ---
+    const calculateBtn = document.getElementById('calculate-btn');
+    const birthdateInput = document.getElementById('birthdate-input');
+    const resultDiv = document.getElementById('numerology-result');
+
+    const lifePathInfo = {
+        1: "คุณคือผู้นำ (The Leader): มีความคิดริเริ่ม เป็นอิสระ และมุ่งมั่นสู่ความสำเร็จ",
+        2: "คุณคือผู้ประสาน (The Mediator): อ่อนโยน เห็นอกเห็นใจผู้อื่น และเป็นนักการทูตโดยธรรมชาติ",
+        3: "คุณคือนักสื่อสาร (The Communicator): มีความคิดสร้างสรรค์ เก่งในการแสดงออก และรักการเข้าสังคม",
+        4: "คุณคือผู้สร้าง (The Builder): มีความมั่นคง ขยันขันแข็ง และเป็นคนที่ไว้ใจได้",
+        5: "คุณคือผู้นิยมอิสระ (The Freedom Seeker): รักการผจญภัย ปรับตัวเก่ง และไม่ชอบความจำเจ",
+        6: "คุณคือผู้ดูแล (The Nurturer): มีความรับผิดชอบสูง รักครอบครัว และชอบดูแลผู้อื่น",
+        7: "คุณคือนักแสวงหา (The Seeker): ฉลาด ช่างสังเกต ชอบวิเคราะห์ และรักการค้นหาความจริง",
+        8: "คุณคือผู้มีอำนาจ (The Powerhouse): มีความทะเยอทะยาน เก่งเรื่องบริหารจัดการ และมีเป้าหมายที่ยิ่งใหญ่",
+        9: "คุณคือผู้มีมนุษยธรรม (The Humanitarian): ใจกว้าง มีเมตตา และมีความคิดเพื่อส่วนรวม",
+        11: "คุณคือผู้มีแรงบันดาลใจ (The Inspired): มีลางสังหรณ์ที่แม่นยำ และมีพลังในการชี้นำผู้คน (Master Number)",
+        22: "คุณคือผู้สร้างสรรค์ที่ยิ่งใหญ่ (The Master Builder): มีศักยภาพในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืน (Master Number)"
+    };
+
+   
+ const zodiacSelector = document.getElementById('zodiac-selector');
+    const zodiacResultDiv = document.getElementById('zodiac-result');
+
+    const zodiacData = {
+        aries: { name: 'ราศีเมษ', icon: '♈', positive: 'พลังแห่งการเริ่มต้น', focus: 'การตัดสินใจที่เด็ดเดี่ยว' },
+        taurus: { name: 'ราศีพฤษภ', icon: '♉', positive: 'ความมั่นคงและมั่งคั่ง', focus: 'การลงมือทำอย่างสม่ำเสมอ' },
+        gemini: { name: 'ราศีเมถุน', icon: '♊', positive: 'การสื่อสารที่ราบรื่น', focus: 'การเรียนรู้สิ่งใหม่ๆ' },
+        cancer: { name: 'ราศีกรกฎ', icon: '♋', positive: 'ความรักความอบอุ่น', focus: 'การดูแลใส่ใจคนรอบข้าง' },
+        leo: { name: 'ราศีสิงห์', icon: '♌', positive: 'ความคิดสร้างสรรค์ที่เปล่งประกาย', focus: 'การแสดงความเป็นผู้นำ' },
+        virgo: { name: 'ราศีกันย์', icon: '♍', positive: 'ความใส่ใจในรายละเอียด', focus: 'การจัดระเบียบชีวิต' },
+        libra: { name: 'ราศีตุลย์', icon: '♎', positive: 'ความสมดุลและความสัมพันธ์', focus: 'การสร้างความร่วมมือ' },
+        scorpio: { name: 'ราศีพิจิก', icon: '♏', positive: 'พลังแห่งการเปลี่ยนแปลง', focus: 'การปล่อยวางสิ่งเก่า' },
+        sagittarius: { name: 'ราศีธนู', icon: '♐', positive: 'การมองโลกในแง่ดี', focus: 'การเปิดใจผจญภัย' },
+        capricorn: { name: 'ราศีมังกร', icon: '♑', positive: 'ความมุ่งมั่นสู่เป้าหมาย', focus: 'การวางแผนระยะยาว' },
+        aquarius: { name: 'ราศีกุมภ์', icon: '♒', positive: 'ความคิดที่แตกต่างและสร้างสรรค์', focus: 'การช่วยเหลือสังคม' },
+        pisces: { name: 'ราศีมีน', icon: '♓', positive: 'พลังแห่งจินตนาการและจิตวิญญาณ', focus: 'การฟังเสียงหัวใจตัวเอง' }
+    };
+
+    function showZodiacInfo(signKey) {
+        // Remove active class from all icons
+        document.querySelectorAll('.zodiac-icon').forEach(icon => icon.classList.remove('active'));
+        // Add active class to the clicked one
+        document.querySelector(`.zodiac-icon[data-zodiac="${signKey}"]`).classList.add('active');
+
+        const data = zodiacData[signKey];
+        zodiacResultDiv.innerHTML = `
+            <h4 class="text-2xl font-bold text-cyan-300">${data.name}</h4>
+            <div class="mt-2 text-gray-200">
+                <p><span class="font-semibold text-purple-300">พลังงานด้านบวก:</span> ${data.positive}</p>
+                <p><span class="font-semibold text-amber-300">สิ่งที่ควรโฟกัส:</span> ${data.focus}</p>
+            </div>
+        `;
+    }
+
+    // Populate zodiac icons
+    Object.keys(zodiacData).forEach(key => {
+        const sign = zodiacData[key];
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'zodiac-icon cursor-pointer p-2 flex flex-col items-center';
+        iconDiv.dataset.zodiac = key;
+        iconDiv.innerHTML = `<span class="text-4xl">${sign.icon}</span><span class="text-xs">${sign.name}</span>`;
+        iconDiv.onclick = () => showZodiacInfo(key);
+        zodiacSelector.appendChild(iconDiv);
+    });
+
+    // --- All other existing JavaScript code... ---
   </script>
 </body>
 </html>
