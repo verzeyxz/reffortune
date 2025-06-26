@@ -19,7 +19,7 @@
         <header class="text-center mb-4">
             <a href="index.html" class="text-purple-300 hover:text-white mb-4 inline-block">&larr; กลับหน้าหลัก</a>
             <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-glow">กำลังโหลด...</h1>
-            <p class="text-white/80 mt-2">ตั้งสมาธิในคำถาม แล้วใช้ใจเลือกไพ่ที่ดึงดูดคุณที่สุด</p>
+            <p id="typewriter-text" class="text-white/80 mt-2"></p>
         </header>
 <div id="controls" class="controls-container glass-box">
     <div id="selection-tray" class="selection-tray-container">
@@ -60,6 +60,29 @@
             <button id="modal-close-btn" class="mt-4 text-gray-300 hover:text-white transition-colors">ปิด</button>
         </div>
     </div>
+
+    <script src="tarot-data.js"></script>
+    <script src="pick.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textElement = document.getElementById('typewriter-text');
+            const text = "โปรดตั้งสมาธิไปที่คำถามที่คุณมีอยู่ในใจ เมื่อคุณพร้อมแล้ว ให้ใช้มือซ้ายเลือกไพ่ที่คุณรู้สึกถึงแรงดึงดูดที่สุด";
+            let i = 0;
+            let speed = 50; // ความเร็วในการพิมพ์ (มิลลิวินาทีต่อตัวอักษร)
+
+            function typeWriter() {
+                if (i < text.length) {
+                    textElement.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
 
     <script src="tarot-data.js"></script>
     <script src="pick.js"></script>
