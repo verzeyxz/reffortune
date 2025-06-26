@@ -15,29 +15,48 @@
     <div class="twinkling"></div>
     <div class="planet"></div>
     
+    <audio id="mystic-bgm" loop>
+        <source src="1.mp3" type="audio/mpeg">
+        <source src="1.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="typewriter-sound">
+        <source src="typewriter-click.mp3" type="audio/mpeg">
+        <source src="typewriter-click.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="card-select-sound">
+        <source src="pick.mp3" type="audio/mpeg">
+        <source src="pick.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div id="selection-screen" class="main-container">
         <header class="text-center mb-4">
             <a href="index.html" class="text-purple-300 hover:text-white mb-4 inline-block">&larr; กลับหน้าหลัก</a>
             <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-glow">กำลังโหลด...</h1>
             <p id="typewriter-text" class="text-white/80 mt-2"></p>
         </header>
-<div id="controls" class="controls-container glass-box">
-    <div id="selection-tray" class="selection-tray-container">
+
+        <div id="controls" class="controls-container glass-box">
+            <div id="selection-tray" class="selection-tray-container">
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="shuffle-button" class="shuffle-btn" title="สับไพ่">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418C6.92 6.588 8 7.582 8 9.5s-1.08 2.912-2.126 4.082C4.827 14.76 3.202 16 1 16H.5a.5.5 0 0 1-.5-.5v-12zm2.291 1.672c.626-.956 1.6-1.587 2.755-1.587H6.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5H5.045c-1.155 0-2.129-.631-2.755-1.587C1.69 11.231 1 10.12 1 8.5c0-1.62.69-2.73 1.291-3.828z"/>
+                        <path d="M16 3.5a.5.5 0 0 1-.5.5h-.793c-1.155 0-2.129.631-2.755 1.587C11.31 6.769 11 7.88 11 9.5c0 1.62.69 2.73 1.291 3.828.626.956 1.6 1.587 2.755 1.587h.793a.5.5 0 0 1 .5.5v-12a.5.5 0 0 1-.5-.5zM15 5.172c-.626.956-1.6 1.587-2.755 1.587h-.793c-1.155 0-2.129-.631-2.755-1.587C8.08 4.231 7.5 3.12 7.5 1.5a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 .5.5v3.672z"/>
+                    </svg>
+                </button>
+                <div id="counter" class="counter-text">เลือกแล้ว 0/10 ใบ</div>
+                <button id="confirm-button" class="confirm-btn" disabled>ยืนยันการเลือก</button>
+            </div>
         </div>
-    <div class="flex items-center gap-4">
-        <button id="shuffle-button" class="shuffle-btn" title="สับไพ่">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418C6.92 6.588 8 7.582 8 9.5s-1.08 2.912-2.126 4.082C4.827 14.76 3.202 16 1 16H.5a.5.5 0 0 1-.5-.5v-12zm2.291 1.672c.626-.956 1.6-1.587 2.755-1.587H6.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5H5.045c-1.155 0-2.129-.631-2.755-1.587C1.69 11.231 1 10.12 1 8.5c0-1.62.69-2.73 1.291-3.828z"/>
-                <path d="M16 3.5a.5.5 0 0 1-.5.5h-.793c-1.155 0-2.129.631-2.755 1.587C11.31 6.769 11 7.88 11 9.5c0 1.62.69 2.73 1.291 3.828.626.956 1.6 1.587 2.755 1.587h.793a.5.5 0 0 1 .5.5v-12a.5.5 0 0 1-.5-.5zM15 5.172c-.626.956-1.6 1.587-2.755 1.587h-.793c-1.155 0-2.129-.631-2.755-1.587C8.08 4.231 7.5 3.12 7.5 1.5a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 .5.5v3.672z"/>
-            </svg>
-        </button>
-        <div id="counter" class="counter-text">เลือกแล้ว 0/10 ใบ</div>
-        <button id="confirm-button" class="confirm-btn" disabled>ยืนยันการเลือก</button>
-    </div>
-</div>
 
         <div id="card-grid" class="card-grid-container">
-            </div>
+        </div>
     </div>
 
     <div id="results-screen" class="main-container hidden">
@@ -46,7 +65,7 @@
             <p class="text-white/80 mt-2">นี่คือไพ่ที่สะท้อนถึงสถานการณ์ของคุณ</p>
         </header>
         <div id="results-grid" class="results-grid-container">
-            </div>
+        </div>
         <div class="text-center mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <button id="save-image-btn" class="save-btn">บันทึกผลเป็นรูปภาพ</button>
             <button id="reset-button" class="confirm-btn">เลือกใหม่อีกครั้ง</button>
@@ -63,28 +82,67 @@
 
     <script src="tarot-data.js"></script>
     <script src="pick.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Get references to DOM elements
             const textElement = document.getElementById('typewriter-text');
-            const text = "โปรดตั้งสมาธิไปที่คำถามที่คุณมีอยู่ในใจ เมื่อคุณพร้อมแล้ว ให้ใช้มือซ้ายเลือกไพ่ที่คุณรู้สึกถึงแรงดึงดูดที่สุด";
-            let i = 0;
-            let speed = 50; // ความเร็วในการพิมพ์ (มิลลิวินาทีต่อตัวอักษร)
+            const pageTitle = document.getElementById('page-title');
+            const cardGrid = document.getElementById('card-grid');
 
-            function typeWriter() {
-                if (i < text.length) {
-                    textElement.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, speed);
+            // Define the text for the typewriter effect
+            const instructionsText = "โปรดตั้งสมาธิไปที่คำถามที่คุณมีอยู่ในใจ เมื่อคุณพร้อมแล้ว ให้ใช้มือซ้ายเลือกไพ่ที่คุณรู้สึกถึงแรงดึงดูดที่สุด";
+            let charIndex = 0;
+            const typingSpeed = 50; // Speed of typing in milliseconds per character
+
+            // Get references to audio elements
+            const typewriterSound = document.getElementById('typewriter-sound');
+            const mysticBGM = document.getElementById('mystic-bgm');
+            const cardSelectSound = document.getElementById('card-select-sound'); 
+
+            /**
+             * Implements the typewriter effect for displaying text.
+             * Plays a typewriter sound for each character.
+             */
+            function typeWriterEffect() {
+                if (charIndex < instructionsText.length) {
+                    textElement.innerHTML += instructionsText.charAt(charIndex);
+                    // Play typewriter sound for each character
+                    if (typewriterSound) {
+                        typewriterSound.currentTime = 0; // Reset sound to play from beginning
+                        typewriterSound.play().catch(e => console.error("Error playing typewriter sound:", e));
+                    }
+                    charIndex++;
+                    setTimeout(typeWriterEffect, typingSpeed);
+                } else {
+                    // Once typing is complete, attempt to play background music.
+                    // Browsers often require user interaction before playing audio automatically.
+                    if (mysticBGM) {
+                        mysticBGM.play().catch(e => console.log("Background music blocked by browser (user interaction may be required):", e));
+                    }
+                    // Change page title after typing is complete
+                    pageTitle.textContent = "เลือกไพ่ของคุณ"; // Update title
                 }
             }
 
-            typeWriter();
+            // Start the typewriter effect when the DOM is fully loaded
+            typeWriterEffect();
+
+            /**
+             * Adds an event listener to the card grid to play a sound when a card is selected.
+             * Uses event delegation for efficiency.
+             */
+            if (cardGrid) {
+                cardGrid.addEventListener('click', function(event) {
+                    // Check if the clicked element (or its closest ancestor) is a card item
+                    const cardElement = event.target.closest('.card-item'); // Assuming your card elements have the class 'card-item'
+                    if (cardElement && cardSelectSound) {
+                        cardSelectSound.currentTime = 0; // Reset sound to play from beginning
+                        cardSelectSound.play().catch(e => console.error("Error playing card select sound:", e));
+                    }
+                });
+            }
         });
     </script>
-</body>
-</html>
-
-    <script src="tarot-data.js"></script>
-    <script src="pick.js"></script>
 </body>
 </html>
