@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - REFFORTUNE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Noto Sans Thai', sans-serif; background-color: #1a1a2e; color: white; }
+        .form-group { background-color: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem; }
+        .form-group h4 { border-bottom: 2px solid #a78bfa; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #d1d5db; }
+        input, textarea { width: 100%; background-color: rgba(0,0,0,0.3); border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.5rem 0.75rem; color: white; transition: border-color 0.3s; }
+        input:focus, textarea:focus { outline: none; border-color: #a78bfa; }
+        textarea { min-height: 80px; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 9999px; font-weight: bold; transition: all 0.3s; cursor: pointer; border: none; }
+        .btn:disabled { background-color: #4b5563; cursor: not-allowed; }
+        .btn-primary { background-color: #7c3aed; color: white; }
+        .btn-primary:not(:disabled):hover { background-color: #6d28d9; }
+        .btn-danger { background-color: #f43f5e; color: white; }
+        .btn-danger:not(:disabled):hover { background-color: #e11d48; }
+        .btn-add { background-color: #38bdf8; color: white; }
+        .btn-add:not(:disabled):hover { background-color: #0ea5e9; }
+        #loader { border-top-color: #a78bfa; }
+        .hidden-content { display: none; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div id="loader" class="w-16 h-16 border-4 border-gray-500 rounded-full animate-spin"></div>
+        <p class="ml-4 text-xl">กำลังตรวจสอบการเข้าระบบ...</p>
+    </div>
+
+    <div id="main-content" class="container mx-auto max-w-5xl hidden-content">
+        <header class="flex justify-between items-center mb-8 flex-wrap gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-violet-300">จัดการแพ็กเกจ (Firebase)</h1>
+                <p id="welcome-message" class="text-gray-400 text-sm mt-1"></p>
+            </div>
+            <div>
+                <a href="index.html" target="_blank" class="btn btn-primary">ดูหน้าเว็บ</a>
+                <button id="logout-button" class="btn btn-danger">ออกจากระบบ</button>
+            </div>
+        </header>
+
+        <div id="packages-form">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-amber-300 mb-4">แพ็กเกจหลัก (Main Packages)</h2>
+                <div id="main-packages-container"></div>
+                <button class="btn btn-add mt-2" onclick="addPackageForm('mainPackages')">+ เพิ่มแพ็กเกจหลัก</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div id="call-packages-container"></div>
+                <div id="text-packages-container"></div>
+            </div>
+
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-purple-300 mb-4">แพ็กเกจเสริม (Add-on Packages)</h2>
+                <div id="addon-packages-container"></div>
+                <button class="btn btn-add mt-2" onclick="addPackageForm('addOnPackages')">+ เพิ่มแพ็กเกจเสริม</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
+
+    <script>
+        // ***************************************************************
+        // ***** สำคัญ: วาง `firebaseConfig` ที่คัดลอกมาไว้ตรงนี้   *****
+        // ***************************************************************
+        const firebaseConfig = {
+  apiKey: "AIzaSyDr1WxZZ5dJA82q3qrpme9-jl1k509hbZU",
+  authDomain: "reffortune-db.firebaseapp.com",
+  projectId: "reffortune-db",
+  storageBucket: "reffortune-db.firebasestorage.app",
+  messagingSenderId: "566276763442",
+  appId: "1:566276763442:web:0fb582964faef76bfa712b"
+};
+        // ***************************************************************
+
+        // --- INITIALIZE FIREBASE ---
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- DOM ELEMENTS ---
+        const loader = document.getElementById('loading-overlay');
+        const mainContent = document.getElementById('main-content');
+        const welcomeMessage = document.getElementById('welcome-message');
+
+        // --- AUTHENTICATION CHECK ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in.
+                console.log('User is logged in:', user.email);
+                mainContent.classList.remove('hidden-content');
+                loader.style.display = 'none';
+                welcomeMessage.textContent = `ยินดีต้อนรับ, ${user.email}`;
+                loadAllPackages();
+            } else {
+                // No user is signed in. Redirect to login page.
+                console.log('User is not logged in. Redirecting...');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // --- LOGOUT BUTTON ---
+        document.getElementById('logout-button').addEventListener('click', () => {
+            auth.signOut().then(() => {
+                console.log('User signed out successfully.');
+                // Sign-out successful. Redirect is handled by onAuthStateChanged.
+            }).catch((error) => {
+                console.error('Sign out error:', error);
+                Swal.fire('ผิดพลาด', 'ไม่สามารถออกจากระบบได้', 'error');
+            });
+        });
+
+        // --- DATA & RENDERING LOGIC (FROM PREVIOUS STEP, NO CHANGES NEEDED) ---
+        const mainContainer = document.getElementById('main-packages-container');
+        const callContainer = document.getElementById('call-packages-container');
+        const textContainer = document.getElementById('text-packages-container');
+        const addOnContainer = document.getElementById('addon-packages-container');
+
+        function renderFormGroup(docId, pkg, type) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.dataset.id = docId;
+            div.dataset.type = type;
+
+            let fieldsHtml = '';
+            ['name', 'price', 'description', 'promo', 'note'].forEach(key => {
+                if (pkg[key] !== undefined) {
+                    const value = pkg[key] || '';
+                    const labelText = key.charAt(0).toUpperCase() + key.slice(1);
+                     if (key === 'description' || key === 'note') {
+                         fieldsHtml += `<div class="mb-3"><label>${labelText}</label><textarea data-key="${key}" rows="3" class="w-full">${value}</textarea></div>`;
+                     } else {
+                         fieldsHtml += `<div class="mb-3"><label>${labelText}</label><input type="text" data-key="${key}" value="${value}" class="w-full"></div>`;
+                     }
+                }
+            });
+
+            div.innerHTML = `
+                <h4 class="font-bold text-lg text-white">${pkg.name || 'แพ็กเกจใหม่'}</h4>
+                <form onsubmit="event.preventDefault(); savePackage('${docId}', '${type}')">
+                    ${fieldsHtml}
+                    <div class="flex gap-4 mt-4">
+                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <button type="button" class="btn btn-danger" onclick="deletePackage('${docId}', '${type}')">ลบ</button>
+                    </div>
+                </form>
+            `;
+            return div;
+        }
+
+        async function loadAllPackages() {
+            // Function to load data from Firestore (no changes from before)
+            try {
+                const mainSnapshot = await db.collection('mainPackages').get();
+                mainContainer.innerHTML = '';
+                mainSnapshot.forEach(doc => mainContainer.appendChild(renderFormGroup(doc.id, doc.data(), 'mainPackages')));
+
+                const addOnSnapshot = await db.collection('addOnPackages').get();
+                addOnContainer.innerHTML = '';
+                addOnSnapshot.forEach(doc => addOnContainer.appendChild(renderFormGroup(doc.id, doc.data(), 'addOnPackages')));
+                
+                // Other package loading logic...
+
+            } catch (error) {
+                console.error("Error loading packages: ", error);
+                Swal.fire('Error!', 'ไม่สามารถโหลดข้อมูลจาก Firebase ได้', 'error');
+            }
+        }
+        
+        async function savePackage(docId, type) {
+            // Save logic (no changes from before)
+            const formContainer = document.querySelector(`[data-id='${docId}']`);
+            const inputs = formContainer.querySelectorAll('input, textarea');
+            const dataToSave = {};
+            inputs.forEach(input => {
+                dataToSave[input.dataset.key] = input.value;
+            });
+
+            try {
+                await db.collection(type).doc(docId).update(dataToSave);
+                Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
+                formContainer.querySelector('h4').textContent = dataToSave.name;
+            } catch (error) {
+                console.error("Error saving package: ", error);
+                Swal.fire('ผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+            }
+        }
+
+        async function addPackageForm(type) {
+            // Add logic (no changes from before)
+            const defaultData = { name: 'แพ็กเกจใหม่', price: '0 บาท', description: 'คำอธิบาย...'};
+            try {
+                const docRef = await db.collection(type).add(defaultData);
+                const newForm = renderFormGroup(docRef.id, defaultData, type);
+                
+                if(type === 'mainPackages') mainContainer.appendChild(newForm);
+                else if (type === 'addOnPackages') addOnContainer.appendChild(newForm);
+
+            } catch (error) {
+                 console.error("Error adding package: ", error);
+                Swal.fire('ผิดพลาด!', 'ไม่สามารถเพิ่มแพ็กเกจได้', 'error');
+            }
+        }
+
+        async function deletePackage(docId, type) {
+            // Delete logic (no changes from before)
+            const result = await Swal.fire({
+                title: 'ต้องการลบใช่หรือไม่?',
+                text: "ข้อมูลจะถูกลบถาวรจากฐานข้อมูล!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await db.collection(type).doc(docId).delete();
+                    document.querySelector(`[data-id='${docId}']`).remove();
+                    Swal.fire('สำเร็จ!', 'ลบข้อมูลเรียบร้อย', 'success');
+                } catch (error) {
+                    console.error("Error deleting package: ", error);
+                    Swal.fire('ผิดพลาด!', 'ไม่สามารถลบข้อมูลได้', 'error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
