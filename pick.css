@@ -1,25 +1,18 @@
-/* --- THEME & BACKGROUND --- */
 /* --- [CHANGED] THEME & BACKGROUND FOR MYSTERIOUS TONE --- */
 body {
-font-family: 'Noto Sans Thai', sans-serif;
-    background-color: #100a33;
-    color: white;
+    font-family: 'Noto Sans Thai', sans-serif;
     /* เปลี่ยนสีพื้นหลังหลักให้มืดสนิท */
     background-color: #0c0a1d; 
     color: #E5E7EB; /* ปรับสีตัวอักษรพื้นฐานให้อ่านง่ายขึ้นบนพื้นหลังมืด */
-overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 .space-bg {
-    background: radial-gradient(ellipse at bottom, #0f0755 0%, #100a33 100%);
     /* เปลี่ยน Gradient ให้เป็นโทนน้ำเงินเข้ม-ดำที่ลึกลับกว่าเดิม */
     background: radial-gradient(ellipse at bottom, #111827 0%, #000000 100%);
 }
 
 .stars, .twinkling, .planet { position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
-.stars { background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; z-index: -3; }
-.twinkling { background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; z-index: -2; animation: move-twinkle-back 200s linear infinite; }
-.planet { width: 300px; height: 300px; background: radial-gradient(circle at 30% 30%, #a29bfe, #6c5ce77a, #2c2d84); border-radius: 50%; box-shadow: 0 0 40px #6c5ce77c, 0 0 80px #a29bfe, inset -20px -10px 40px #352c84; animation: pulse 6s infinite ease-in-out; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; }
 
 .stars { 
     background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; 
@@ -49,9 +42,6 @@ overflow-x: hidden;
 }
 
 @keyframes move-twinkle-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
-@keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
-.text-glow { text-shadow: 0 0 8px rgba(192, 132, 252, 0.6), 0 0 32px rgba(139, 92, 246, 0.4); }
-.glass-box { background: rgba(141, 133, 172, 0.2); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); }
 
 /* [NEW] Animation ใหม่สำหรับแสงนวลๆ */
 @keyframes slow-pulse { 
@@ -75,61 +65,51 @@ overflow-x: hidden;
 
 /* --- LAYOUT --- */
 .main-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 2rem 1rem;
-position: relative;
-z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 10;
 }
 
 /* --- CONTROLS & SELECTION TRAY --- */
 .controls-container {
-position: sticky;
-top: 1rem;
-z-index: 20;
-display: flex;
-justify-content: space-between;
-align-items: center;
-gap: 1.5rem;
-padding: 1rem 1.5rem;
-margin-bottom: 2rem;
-border-radius: 1rem;
+    position: sticky;
+    top: 1rem;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 1rem;
 }
 .selection-tray-container {
-position: relative;
-display: flex;
-align-items: center;
-height: 80px;
-flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    flex-grow: 1;
 }
 .tray-card {
-position: absolute;
-width: 54px;
-aspect-ratio: 2/3;
-background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
-background-size: cover;
-border-radius: 5px;
-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    border: 2px solid #A78BFA;
-    filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.5));
+    position: absolute;
+    width: 54px;
+    aspect-ratio: 2/3;
+    background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
+    background-size: cover;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
     /* [CHANGED] ปรับสีขอบไพ่ในถาด */
     border: 2px solid #4F46E5; 
     filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.4));
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-cursor: pointer;
-opacity: 0;
-transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
 }
 .tray-card.in-tray { opacity: 1; transform: translateY(0); }
 .tray-card:hover { transform: translateY(-8px) scale(1.1); z-index: 100; }
-.counter-text { font-size: 1.25rem; font-weight: bold; color: #E9D5FF; white-space: nowrap; }
-.confirm-btn { background-color: #8B5CF6; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: bold; border: none; transition: all 0.3s ease; white-space: nowrap; }
-.confirm-btn:hover:not(:disabled) { background-color: #A78BFA; transform: scale(1.05); }
-.confirm-btn:disabled { background-color: #374151; cursor: not-allowed; opacity: 0.6; }
-.confirm-btn.ready { animation: pulse-glow 2s infinite; }
-@keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(167, 139, 250, 0); } 50% { box-shadow: 0 0 20px rgba(196, 181, 253, 0.7); } }
-.shuffle-btn { background-color: transparent; color: #C4B5FD; padding: 0.65rem; border-radius: 9999px; border: 2px solid #8B5CF6; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
-.shuffle-btn:hover:not(:disabled) { background-color: #8B5CF6; color: white; transform: scale(1.1) rotate(180deg); }
 .counter-text { font-size: 1.25rem; font-weight: bold; color: #D1D5DB; }
 
 /* [CHANGED] ปรับสีปุ่มให้เข้ากับธีม */
@@ -183,28 +163,19 @@ transform: translateY(20px);
 
 /* --- [MODIFIED] CARD GRID & ANIMATION STYLES --- */
 .card-grid-container {
-    perspective: 1000px;
-position: relative; 
-    min-height: 500px; /* ลดความสูงลงเล็กน้อย */
-width: 100%;
+    position: relative; 
+    width: 100%;
     min-height: 800px; 
 }
 
 .card-container {
     position: absolute; 
-cursor: pointer;
-    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
     transition: transform 0.3s ease, top 0.3s ease, left 0.3s ease;
     animation: fadeInGrid 0.5s ease-out forwards;
     opacity: 0;
 }
 
-    /* --- CHANGED for Top-Center Origin --- */
-    position: absolute;
-    top: 400px;          /* จุดอ้างอิงแนวตั้งจากด้านบน */
-    left: 50%;          /* จุดอ้างอิงแนวนอน (กึ่งกลาง) */
-    width: 80px;
-    transform-origin: top center; /* !! สำคัญมาก: เปลี่ยนจุดหมุนไปที่ขอบบนของการ์ด */
 @keyframes fadeInGrid {
     from {
         opacity: 0;
@@ -218,43 +189,23 @@ cursor: pointer;
 
 
 .card-container:hover {
-    /* ปรับเอฟเฟกต์ hover ให้เข้ากับ layout ใหม่ */
-    transform: scale(1.1) translateY(5px);
-    z-index: 100;
     transform: translateY(-10px) scale(1.05);
     z-index: 100 !important;
 }
 
 .card-back {
-width: 100%;
-aspect-ratio: 2/3;
-background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
-background-size: cover;
-border-radius: 8px;
-border: 2px solid transparent;
-transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    width: 100%;
+    aspect-ratio: 2/3;
+    background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
+    background-size: cover;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* เพิ่มเงาให้เข้มขึ้น */
 }
 
 /* [CHANGED] ปรับสีของไพ่ที่ถูกเลือก */
 .card-container.selected .card-back {
-    border-color: #C4B5FD;
-    transform: translateY(10px) scale(1.02); /* ปรับ transform */
-    box-shadow: 0 10px 20px rgba(196, 181, 253, 0.5);
-    opacity: 0.7;
-}
-
-.card-container.gathering {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    bottom: auto; 
-}
-
-.card-container.hiding {
-    opacity: 0;
-    transition: opacity 1.5s ease-out;
     border-color: #818CF8; /* สี Indigo อ่อน */
     transform: translateY(-15px);
     box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
@@ -262,16 +213,12 @@ transition: all 0.3s ease;
 }
 
 /* --- RESULTS SCREEN & MODAL STYLES --- */
-#results-screen { background: rgba(15, 7, 85, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(5px); }
 #results-screen { background: rgba(17, 24, 39, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(5px); }
 .results-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, auto); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
 .result-card { text-align: center; animation: fadeIn 0.5s ease-out forwards; cursor: pointer; transition: transform 0.3s ease; }
 .result-card:hover { transform: scale(1.07); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .result-card img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-.result-card p { margin-top: 0.75rem; font-weight: bold; color: #E9D5FF; font-size: 0.875rem; }
-.save-btn { background-color: #10B981; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: bold; border: none; transition: all 0.3s ease; }
-.save-btn:hover { background-color: #34D399; transform: scale(1.05); }
 .result-card p { margin-top: 0.75rem; font-weight: bold; color: #E5E7EB; font-size: 0.875rem; }
 .save-btn { /* ใช้สไตล์เดียวกับ confirm-btn ที่พร้อม */
     background-color: #10B981; 
@@ -290,28 +237,11 @@ transition: all 0.3s ease;
 #card-modal-container.visible { opacity: 1; pointer-events: auto; }
 #card-modal-container.visible #card-modal-panel { transform: scale(1); }
 
-/* --- ADDED/MODIFIED FOR MOBILE --- */
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-.controls-container { flex-direction: column; gap: 1rem; padding: 1rem; }
-.selection-tray-container { width: 100%; justify-content: center; }
-
-    .card-grid-container {
-        min-height: 400px;
-    }
-
-    .card-container {
-        width: 60px;
-        top: 251px; /* ปรับตำแหน่งเริ่มต้นบนมือถือ */
-    }
-
-.results-grid-container { gap: 0.75rem; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto; }
-.result-card p { font-size: 0.7rem; margin-top: 0.5rem; }
-}
-
-@media (max-width: 480px) {
-    .card-container {
-        width: 60px@;
-        top: 255px;
-    }
+    .controls-container { flex-direction: column; gap: 1rem; padding: 1rem; }
+    .selection-tray-container { width: 100%; justify-content: center; }
+    
+    .results-grid-container { gap: 0.75rem; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto; }
+    .result-card p { font-size: 0.7rem; margin-top: 0.5rem; }
 }
