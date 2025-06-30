@@ -1,5 +1,0 @@
-# Netlify redirects file
-/admin /admin.html 200
-/login /login.html 200
-/pick /pick.html 200
-/* /index.html 404
