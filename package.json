@@ -1,0 +1,16 @@
+{
+  "name": "reffortune-tarot",
+  "version": "1.0.0",
+  "description": "REFFORTUNE - Tarot card reading web application",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo \"Static site - no build step required\"",
+    "start": "echo \"Open index.html in your browser\"",
+    "dev": "echo \"Development server not configured for static site\""
+  },
+  "keywords": ["tarot", "fortune", "cards", "divination"],
+  "author": "REFFORTUNE",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {}
+}
