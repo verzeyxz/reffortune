@@ -1,18 +1,25 @@
+/* --- THEME & BACKGROUND --- */
 /* --- [CHANGED] THEME & BACKGROUND FOR MYSTERIOUS TONE --- */
 body {
-    font-family: 'Noto Sans Thai', sans-serif;
+font-family: 'Noto Sans Thai', sans-serif;
+    background-color: #100a33;
+    color: white;
     /* เปลี่ยนสีพื้นหลังหลักให้มืดสนิท */
     background-color: #0c0a1d; 
     color: #E5E7EB; /* ปรับสีตัวอักษรพื้นฐานให้อ่านง่ายขึ้นบนพื้นหลังมืด */
-    overflow-x: hidden;
+overflow-x: hidden;
 }
 
 .space-bg {
+    background: radial-gradient(ellipse at bottom, #0f0755 0%, #100a33 100%);
     /* เปลี่ยน Gradient ให้เป็นโทนน้ำเงินเข้ม-ดำที่ลึกลับกว่าเดิม */
     background: radial-gradient(ellipse at bottom, #111827 0%, #000000 100%);
 }
 
 .stars, .twinkling, .planet { position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
+.stars { background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; z-index: -3; }
+.twinkling { background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; z-index: -2; animation: move-twinkle-back 200s linear infinite; }
+.planet { width: 300px; height: 300px; background: radial-gradient(circle at 30% 30%, #a29bfe, #6c5ce77a, #2c2d84); border-radius: 50%; box-shadow: 0 0 40px #6c5ce77c, 0 0 80px #a29bfe, inset -20px -10px 40px #352c84; animation: pulse 6s infinite ease-in-out; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; }
 
 .stars { 
     background: transparent url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat top center; 
@@ -42,6 +49,9 @@ body {
 }
 
 @keyframes move-twinkle-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+@keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
+.text-glow { text-shadow: 0 0 8px rgba(192, 132, 252, 0.6), 0 0 32px rgba(139, 92, 246, 0.4); }
+.glass-box { background: rgba(141, 133, 172, 0.2); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); }
 
 /* [NEW] Animation ใหม่สำหรับแสงนวลๆ */
 @keyframes slow-pulse { 
@@ -49,181 +59,80 @@ body {
     50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.8; } 
 }
 
-/* [ENHANCED] Page Transition Animations */
-.main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    position: relative;
-    z-index: 10;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* [NEW] Header Animation */
-header {
-    animation: slideInFromTop 1s ease-out;
-}
-
-@keyframes slideInFromTop {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* [ENHANCED] Text Glow with Animation */
+/* [CHANGED] ปรับ Glow ของตัวอักษรให้เป็นสีขาวนวลๆ */
 .text-glow { 
     text-shadow: 0 0 12px rgba(229, 231, 235, 0.3);
-    animation: textGlowPulse 3s ease-in-out infinite;
 }
 
-@keyframes textGlowPulse {
-    0%, 100% { 
-        text-shadow: 0 0 12px rgba(229, 231, 235, 0.3);
-    }
-    50% { 
-        text-shadow: 0 0 20px rgba(229, 231, 235, 0.6), 0 0 30px rgba(139, 92, 246, 0.3);
-    }
-}
-
-/* [ENHANCED] Glass Box with Hover Animation */
+/* [CHANGED] ปรับสีกระจกให้เข้ากับธีมมืด */
 .glass-box { 
     background: rgba(17, 24, 39, 0.3); /* สีเทาน้ำเงินเข้มโปร่งแสง */
     backdrop-filter: blur(8px); 
     -webkit-backdrop-filter: blur(8px); 
     border-radius: 1rem; 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08); 
 }
 
-.glass-box:hover {
-    background: rgba(17, 24, 39, 0.4);
-    border-color: rgba(139, 92, 246, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+/* --- LAYOUT --- */
+.main-container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 2rem 1rem;
+position: relative;
+z-index: 10;
 }
 
-/* --- ENHANCED CONTROLS & SELECTION TRAY --- */
+/* --- CONTROLS & SELECTION TRAY --- */
 .controls-container {
-    position: sticky;
-    top: 1rem;
-    z-index: 20;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 1rem;
-    animation: slideInFromRight 0.8s ease-out 0.3s both;
+position: sticky;
+top: 1rem;
+z-index: 20;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 1.5rem;
+padding: 1rem 1.5rem;
+margin-bottom: 2rem;
+border-radius: 1rem;
 }
-
-@keyframes slideInFromRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 .selection-tray-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 80px;
-    flex-grow: 1;
-    animation: expandWidth 0.6s ease-out 0.5s both;
+position: relative;
+display: flex;
+align-items: center;
+height: 80px;
+flex-grow: 1;
 }
-
-@keyframes expandWidth {
-    from {
-        width: 0;
-        opacity: 0;
-    }
-    to {
-        width: 100%;
-        opacity: 1;
-    }
-}
-
-/* [ENHANCED] Tray Card Animations */
 .tray-card {
-    position: absolute;
-    width: 54px;
-    aspect-ratio: 2/3;
-    background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
-    background-size: cover;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+position: absolute;
+width: 54px;
+aspect-ratio: 2/3;
+background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
+background-size: cover;
+border-radius: 5px;
+box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    border: 2px solid #A78BFA;
+    filter: drop-shadow(0 0 5px rgba(167, 139, 250, 0.5));
     /* [CHANGED] ปรับสีขอบไพ่ในถาด */
     border: 2px solid #4F46E5; 
     filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.4));
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(20px) scale(0.8);
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+cursor: pointer;
+opacity: 0;
+transform: translateY(20px);
 }
+.tray-card.in-tray { opacity: 1; transform: translateY(0); }
+.tray-card:hover { transform: translateY(-8px) scale(1.1); z-index: 100; }
+.counter-text { font-size: 1.25rem; font-weight: bold; color: #E9D5FF; white-space: nowrap; }
+.confirm-btn { background-color: #8B5CF6; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: bold; border: none; transition: all 0.3s ease; white-space: nowrap; }
+.confirm-btn:hover:not(:disabled) { background-color: #A78BFA; transform: scale(1.05); }
+.confirm-btn:disabled { background-color: #374151; cursor: not-allowed; opacity: 0.6; }
+.confirm-btn.ready { animation: pulse-glow 2s infinite; }
+@keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(167, 139, 250, 0); } 50% { box-shadow: 0 0 20px rgba(196, 181, 253, 0.7); } }
+.shuffle-btn { background-color: transparent; color: #C4B5FD; padding: 0.65rem; border-radius: 9999px; border: 2px solid #8B5CF6; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+.shuffle-btn:hover:not(:disabled) { background-color: #8B5CF6; color: white; transform: scale(1.1) rotate(180deg); }
+.counter-text { font-size: 1.25rem; font-weight: bold; color: #D1D5DB; }
 
-.tray-card.in-tray { 
-    opacity: 1; 
-    transform: translateY(0) scale(1);
-    animation: cardSlideIn 0.5s ease-out;
-}
-
-@keyframes cardSlideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(30px) scale(0.7) rotate(-10deg);
-    }
-    50% {
-        transform: translateY(-5px) scale(1.1) rotate(2deg);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotate(0deg);
-    }
-}
-
-.tray-card:hover { 
-    transform: translateY(-8px) scale(1.1) rotate(5deg); 
-    z-index: 100;
-    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
-}
-
-/* [ENHANCED] Counter Animation */
-.counter-text { 
-    font-size: 1.25rem; 
-    font-weight: bold; 
-    color: #D1D5DB;
-    animation: counterPulse 0.3s ease-out;
-    transition: all 0.3s ease;
-}
-
-@keyframes counterPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); color: #8B5CF6; }
-    100% { transform: scale(1); }
-}
-
-/* [ENHANCED] Button Animations */
+/* [CHANGED] ปรับสีปุ่มให้เข้ากับธีม */
 .confirm-btn { 
     background-color: #374151; /* สีเทาเข้ม */
     color: #F9FAFB; 
@@ -232,32 +141,12 @@ header {
     font-weight: bold; 
     border: 1px solid #4B5563;
     transition: all 0.3s ease; 
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
+    white-space: nowrap; 
 }
-
-.confirm-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-.confirm-btn:hover:not(:disabled)::before {
-    left: 100%;
-}
-
 .confirm-btn:hover:not(:disabled) { 
     background-color: #4B5563; 
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transform: scale(1.05); 
 }
-
 .confirm-btn:disabled { 
     background-color: #1F2937; 
     cursor: not-allowed; 
@@ -265,25 +154,15 @@ header {
     color: #6B7280;
     border-color: #374151;
 }
-
 .confirm-btn.ready { 
     background-color: #4f46e5; /* สี Indigo สำหรับปุ่มที่พร้อม */
     border-color: #6366f1;
-    animation: readyButtonPulse 2s infinite;
+    animation: pulse-glow 2s infinite; 
 }
-
-@keyframes readyButtonPulse { 
-    0%, 100% { 
-        box-shadow: 0 0 15px rgba(99, 102, 241, 0);
-        transform: scale(1);
-    } 
-    50% { 
-        box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
-        transform: scale(1.02);
-    } 
+@keyframes pulse-glow { 
+    0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0); } 
+    50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); } 
 }
-
-/* [ENHANCED] Shuffle Button */
 .shuffle-btn { 
     background-color: transparent; 
     color: #9CA3AF; 
@@ -293,203 +172,108 @@ header {
     transition: all 0.3s ease; 
     display: flex; 
     align-items: center; 
-    justify-content: center;
-    position: relative;
+    justify-content: center; 
 }
-
 .shuffle-btn:hover:not(:disabled) { 
     background-color: #374151; 
     color: white; 
-    transform: scale(1.1) rotate(180deg);
-    border-color: #8B5CF6;
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    transform: scale(1.1) rotate(180deg); 
 }
-
 .shuffle-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* --- [ENHANCED] CARD GRID & ANIMATION STYLES --- */
+/* --- [MODIFIED] CARD GRID & ANIMATION STYLES --- */
 .card-grid-container {
-    position: relative; 
-    width: 100%;
-    min-height: 800px;
-    animation: fadeInScale 1s ease-out 0.6s both;
-}
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    perspective: 1000px;
+position: relative; 
+    min-height: 500px; /* ลดความสูงลงเล็กน้อย */
+width: 100%;
+    min-height: 800px; 
 }
 
 .card-container {
     position: absolute; 
-    cursor: pointer;
-    transition: transform 0.3s ease, top 0.3s ease, left 0.3s ease, filter 0.3s ease;
-    animation: cardAppear 0.6s ease-out forwards;
+cursor: pointer;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.3s ease, top 0.3s ease, left 0.3s ease;
+    animation: fadeInGrid 0.5s ease-out forwards;
     opacity: 0;
 }
 
-@keyframes cardAppear {
+    /* --- CHANGED for Top-Center Origin --- */
+    position: absolute;
+    top: 400px;          /* จุดอ้างอิงแนวตั้งจากด้านบน */
+    left: 50%;          /* จุดอ้างอิงแนวนอน (กึ่งกลาง) */
+    width: 80px;
+    transform-origin: top center; /* !! สำคัญมาก: เปลี่ยนจุดหมุนไปที่ขอบบนของการ์ด */
+@keyframes fadeInGrid {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.8) rotateY(90deg);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1) rotateY(0deg);
+        transform: translateY(0);
     }
 }
 
+
 .card-container:hover {
-    transform: translateY(-15px) scale(1.08) rotateZ(2deg);
+    /* ปรับเอฟเฟกต์ hover ให้เข้ากับ layout ใหม่ */
+    transform: scale(1.1) translateY(5px);
+    z-index: 100;
+    transform: translateY(-10px) scale(1.05);
     z-index: 100 !important;
-    filter: brightness(1.1) drop-shadow(0 15px 30px rgba(139, 92, 246, 0.3));
 }
 
 .card-back {
-    width: 100%;
-    aspect-ratio: 2/3;
-    background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
-    background-size: cover;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    position: relative;
-    overflow: hidden;
+width: 100%;
+aspect-ratio: 2/3;
+background-image: url(https://z262998-h64m7.ls01.zwhhosting.com/card/Sp.png);
+background-size: cover;
+border-radius: 8px;
+border: 2px solid transparent;
+transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* เพิ่มเงาให้เข้มขึ้น */
 }
 
-.card-back::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-}
-
-.card-container:hover .card-back::before {
-    transform: translateX(100%);
-}
-
-/* [ENHANCED] Selected Card Animation */
+/* [CHANGED] ปรับสีของไพ่ที่ถูกเลือก */
 .card-container.selected .card-back {
-    border-color: #818CF8; /* สี Indigo อ่อน */
-    transform: translateY(-15px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
-    opacity: 1;
-    animation: selectedCardGlow 2s ease-in-out infinite;
+    border-color: #C4B5FD;
+    transform: translateY(10px) scale(1.02); /* ปรับ transform */
+    box-shadow: 0 10px 20px rgba(196, 181, 253, 0.5);
+    opacity: 0.7;
 }
 
-@keyframes selectedCardGlow {
-    0%, 100% {
-        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
-    }
-    50% {
-        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.7);
-    }
+.card-container.gathering {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    bottom: auto; 
 }
 
-/* --- [ENHANCED] RESULTS SCREEN & MODAL STYLES --- */
-#results-screen { 
-    background: rgba(17, 24, 39, 0.5); 
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 1rem; 
-    padding: 2rem; 
-    backdrop-filter: blur(5px);
-    animation: resultsSlideIn 0.8s ease-out;
-}
-
-@keyframes resultsSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.results-grid-container { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    grid-template-rows: repeat(2, auto); 
-    gap: 1.5rem; 
-    max-width: 1000px; 
-    margin: 0 auto;
-    animation: gridExpand 0.6s ease-out 0.3s both;
-}
-
-@keyframes gridExpand {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.result-card { 
-    text-align: center; 
-    animation: resultCardReveal 0.8s ease-out forwards; 
-    cursor: pointer; 
-    transition: all 0.3s ease;
-    transform: translateY(20px);
+.card-container.hiding {
     opacity: 0;
+    transition: opacity 1.5s ease-out;
+    border-color: #818CF8; /* สี Indigo อ่อน */
+    transform: translateY(-15px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    opacity: 1; /* ทำให้ไพ่ที่เลือกสว่างชัด */
 }
 
-@keyframes resultCardReveal {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px) rotateX(90deg); 
-    } 
-    to { 
-        opacity: 1; 
-        transform: translateY(0) rotateX(0deg); 
-    } 
-}
-
-.result-card:hover { 
-    transform: scale(1.08) translateY(-10px) rotateZ(2deg);
-    filter: brightness(1.1);
-}
-
-.result-card img { 
-    width: 100%; 
-    border-radius: 8px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    transition: all 0.3s ease;
-}
-
-.result-card:hover img {
-    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
-}
-
-.result-card p { 
-    margin-top: 0.75rem; 
-    font-weight: bold; 
-    color: #E5E7EB; 
-    font-size: 0.875rem;
-    transition: color 0.3s ease;
-}
-
-.result-card:hover p {
-    color: #C4B5FD;
-}
-
-/* [ENHANCED] Save Button */
-.save-btn { 
+/* --- RESULTS SCREEN & MODAL STYLES --- */
+#results-screen { background: rgba(15, 7, 85, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(5px); }
+#results-screen { background: rgba(17, 24, 39, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(5px); }
+.results-grid-container { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, auto); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+.result-card { text-align: center; animation: fadeIn 0.5s ease-out forwards; cursor: pointer; transition: transform 0.3s ease; }
+.result-card:hover { transform: scale(1.07); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.result-card img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+.result-card p { margin-top: 0.75rem; font-weight: bold; color: #E9D5FF; font-size: 0.875rem; }
+.save-btn { background-color: #10B981; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: bold; border: none; transition: all 0.3s ease; }
+.save-btn:hover { background-color: #34D399; transform: scale(1.05); }
+.result-card p { margin-top: 0.75rem; font-weight: bold; color: #E5E7EB; font-size: 0.875rem; }
+.save-btn { /* ใช้สไตล์เดียวกับ confirm-btn ที่พร้อม */
     background-color: #10B981; 
     color: white; 
     padding: 0.75rem 1.5rem; 
@@ -497,183 +281,37 @@ header {
     font-weight: bold; 
     border: none;
     transition: all 0.3s ease; 
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
+    white-space: nowrap; 
 }
-
-.save-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s;
-}
-
-.save-btn:hover::before {
-    left: 100%;
-}
-
 .save-btn:hover { 
     background-color: #34D399; 
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    transform: scale(1.05); 
 }
+#card-modal-container.visible { opacity: 1; pointer-events: auto; }
+#card-modal-container.visible #card-modal-panel { transform: scale(1); }
 
-/* [ENHANCED] Modal Animations */
-#card-modal-container {
-    transition: all 0.3s ease;
-}
-
-#card-modal-container.visible { 
-    opacity: 1; 
-    pointer-events: auto;
-    animation: modalBackdropFade 0.3s ease-out;
-}
-
-@keyframes modalBackdropFade {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-#card-modal-panel {
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-#card-modal-container.visible #card-modal-panel { 
-    transform: scale(1);
-    animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: scale(0.7) translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-/* [NEW] Loading Animation */
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(139, 92, 246, 0.3);
-    border-top: 4px solid #8B5CF6;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* [NEW] Floating Elements Animation */
-.floating-element {
-    animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-}
-
-/* [NEW] Typewriter Cursor Effect */
-.typewriter-cursor::after {
-    content: '|';
-    animation: blink 1s infinite;
-    color: #8B5CF6;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-/* --- RESPONSIVE ENHANCEMENTS --- */
+/* --- ADDED/MODIFIED FOR MOBILE --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    .controls-container { 
-        flex-direction: column; 
-        gap: 1rem; 
-        padding: 1rem;
-        animation: slideInFromTop 0.8s ease-out 0.3s both;
-    }
-    
-    .selection-tray-container { 
-        width: 100%; 
-        justify-content: center;
-    }
-    
-    .results-grid-container { 
-        gap: 0.75rem; 
-        grid-template-columns: repeat(5, 1fr); 
-        grid-template-rows: auto;
-    }
-    
-    .result-card p { 
-        font-size: 0.7rem; 
-        margin-top: 0.5rem; 
+.controls-container { flex-direction: column; gap: 1rem; padding: 1rem; }
+.selection-tray-container { width: 100%; justify-content: center; }
+
+    .card-grid-container {
+        min-height: 400px;
     }
 
-    .main-container {
-        padding: 1rem 0.5rem;
+    .card-container {
+        width: 60px;
+        top: 251px; /* ปรับตำแหน่งเริ่มต้นบนมือถือ */
     }
 
-    .card-container:hover {
-        transform: translateY(-10px) scale(1.05);
+.results-grid-container { gap: 0.75rem; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto; }
+.result-card p { font-size: 0.7rem; margin-top: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    .card-container {
+        width: 60px@;
+        top: 255px;
     }
-}
-
-/* [NEW] Smooth Page Transitions */
-.page-transition-enter {
-    opacity: 0;
-    transform: translateX(100px);
-}
-
-.page-transition-enter-active {
-    opacity: 1;
-    transform: translateX(0);
-    transition: all 0.5s ease-out;
-}
-
-.page-transition-exit {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.page-transition-exit-active {
-    opacity: 0;
-    transform: translateX(-100px);
-    transition: all 0.5s ease-out;
-}
-
-/* [NEW] Interactive Feedback */
-.interactive-feedback {
-    position: relative;
-    overflow: hidden;
-}
-
-.interactive-feedback::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-}
-
-.interactive-feedback:active::after {
-    width: 300px;
-    height: 300px;
 }
