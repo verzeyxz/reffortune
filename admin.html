@@ -8,29 +8,280 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body { font-family: 'Noto Sans Thai', sans-serif; background-color: #1a1a2e; color: white; }
-        .form-group { background-color: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem; }
-        .form-group h4 { border-bottom: 2px solid #a78bfa; padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; color: #d1d5db; }
-        input, textarea { width: 100%; background-color: rgba(0,0,0,0.3); border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.5rem 0.75rem; color: white; transition: border-color 0.3s; }
-        input:focus, textarea:focus { outline: none; border-color: #a78bfa; }
+        body { 
+            font-family: 'Noto Sans Thai', sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+            color: white; 
+            min-height: 100vh;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%); }
+            50% { background: linear-gradient(135deg, #16213e 0%, #1a1a2e 50%, #1e1b4b 100%); }
+        }
+        
+        .form-group { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .form-group:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+        }
+        
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group h4 { 
+            border-bottom: 2px solid #a78bfa; 
+            padding-bottom: 0.5rem; 
+            margin-bottom: 1rem;
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(167, 139, 250, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(167, 139, 250, 0.8); }
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            color: #d1d5db;
+            transition: color 0.3s ease;
+        }
+        
+        input, textarea { 
+            width: 100%; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid #4b5563; 
+            border-radius: 0.375rem; 
+            padding: 0.5rem 0.75rem; 
+            color: white; 
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus { 
+            outline: none; 
+            border-color: #a78bfa;
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+            transform: scale(1.02);
+        }
+        
         textarea { min-height: 80px; }
-        .btn { padding: 0.6rem 1.5rem; border-radius: 9999px; font-weight: bold; transition: all 0.3s; cursor: pointer; border: none; }
-        .btn:disabled { background-color: #4b5563; cursor: not-allowed; }
-        .btn-primary { background-color: #7c3aed; color: white; }
-        .btn-primary:not(:disabled):hover { background-color: #6d28d9; }
-        .btn-danger { background-color: #f43f5e; color: white; }
-        .btn-danger:not(:disabled):hover { background-color: #e11d48; }
-        .btn-add { background-color: #38bdf8; color: white; }
-        .btn-add:not(:disabled):hover { background-color: #0ea5e9; }
-        #loader { border-top-color: #a78bfa; }
-        .hidden-content { display: none; }
+        
+        .btn { 
+            padding: 0.6rem 1.5rem; 
+            border-radius: 9999px; 
+            font-weight: bold; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:disabled { 
+            background-color: #4b5563; 
+            cursor: not-allowed; 
+            opacity: 0.5;
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(45deg, #7c3aed, #a855f7);
+            color: white;
+        }
+        
+        .btn-primary:not(:disabled):hover { 
+            background: linear-gradient(45deg, #6d28d9, #9333ea);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+        }
+        
+        .btn-danger { 
+            background: linear-gradient(45deg, #f43f5e, #ef4444);
+            color: white;
+        }
+        
+        .btn-danger:not(:disabled):hover { 
+            background: linear-gradient(45deg, #e11d48, #dc2626);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.4);
+        }
+        
+        .btn-add { 
+            background: linear-gradient(45deg, #38bdf8, #0ea5e9);
+            color: white;
+        }
+        
+        .btn-add:not(:disabled):hover { 
+            background: linear-gradient(45deg, #0ea5e9, #0284c7);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+        }
+        
+        #loader { 
+            border-top-color: #a78bfa;
+            animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .hidden-content { 
+            display: none; 
+        }
+        
+        /* Loading overlay animation */
+        #loading-overlay {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Main content animation */
+        #main-content {
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+        
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header animation */
+        header {
+            animation: slideInFromTop 0.8s ease-out 0.2s both;
+        }
+        
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered form group animations */
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* Interactive feedback */
+        .interactive-element {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interactive-element::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(167, 139, 250, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        
+        .interactive-element:active::after {
+            width: 200px;
+            height: 200px;
+        }
+        
+        /* Welcome message animation */
+        #welcome-message {
+            animation: typewriter 2s steps(40) 1s both;
+            border-right: 2px solid #a78bfa;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        /* Floating animation for buttons */
+        .floating-btn {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        /* Success animation */
+        .success-flash {
+            animation: successFlash 0.5s ease-out;
+        }
+        
+        @keyframes successFlash {
+            0% { background-color: rgba(16, 185, 129, 0); }
+            50% { background-color: rgba(16, 185, 129, 0.2); }
+            100% { background-color: rgba(16, 185, 129, 0); }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-        <div id="loader" class="w-16 h-16 border-4 border-gray-500 rounded-full animate-spin"></div>
+        <div id="loader" class="w-16 h-16 border-4 border-gray-500 rounded-full"></div>
         <p class="ml-4 text-xl">กำลังตรวจสอบการเข้าระบบ...</p>
     </div>
 
@@ -40,9 +291,9 @@
                 <h1 class="text-3xl md:text-4xl font-bold text-violet-300">จัดการแพ็กเกจ (Firebase)</h1>
                 <p id="welcome-message" class="text-gray-400 text-sm mt-1"></p>
             </div>
-            <div>
-                <a href="index.html" target="_blank" class="btn btn-primary">ดูหน้าเว็บ</a>
-                <button id="logout-button" class="btn btn-danger">ออกจากระบบ</button>
+            <div class="flex gap-4">
+                <a href="index.html" target="_blank" class="btn btn-primary floating-btn interactive-element">ดูหน้าเว็บ</a>
+                <button id="logout-button" class="btn btn-danger interactive-element">ออกจากระบบ</button>
             </div>
         </header>
 
@@ -50,7 +301,7 @@
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-amber-300 mb-4">แพ็กเกจหลัก (Main Packages)</h2>
                 <div id="main-packages-container"></div>
-                <button class="btn btn-add mt-2" onclick="addPackageForm('mainPackages')">+ เพิ่มแพ็กเกจหลัก</button>
+                <button class="btn btn-add mt-2 interactive-element" onclick="addPackageForm('mainPackages')">+ เพิ่มแพ็กเกจหลัก</button>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 mb-8">
@@ -61,7 +312,7 @@
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-purple-300 mb-4">แพ็กเกจเสริม (Add-on Packages)</h2>
                 <div id="addon-packages-container"></div>
-                <button class="btn btn-add mt-2" onclick="addPackageForm('addOnPackages')">+ เพิ่มแพ็กเกจเสริม</button>
+                <button class="btn btn-add mt-2 interactive-element" onclick="addPackageForm('addOnPackages')">+ เพิ่มแพ็กเกจเสริม</button>
             </div>
         </div>
     </div>
@@ -94,15 +345,59 @@
         const mainContent = document.getElementById('main-content');
         const welcomeMessage = document.getElementById('welcome-message');
 
+        // --- ENHANCED ANIMATION UTILITIES ---
+        function createRippleEffect(element, event) {
+            const ripple = document.createElement('span');
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: rgba(167, 139, 250, 0.3);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            `;
+            
+            element.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Add ripple animation CSS
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
+
         // --- AUTHENTICATION CHECK ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 // User is signed in.
                 console.log('User is logged in:', user.email);
-                mainContent.classList.remove('hidden-content');
-                loader.style.display = 'none';
-                welcomeMessage.textContent = `ยินดีต้อนรับ, ${user.email}`;
-                loadAllPackages();
+                
+                // Enhanced loading transition
+                setTimeout(() => {
+                    loader.style.animation = 'fadeOut 0.5s ease-out forwards';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        mainContent.classList.remove('hidden-content');
+                        welcomeMessage.textContent = `ยินดีต้อนรับ, ${user.email}`;
+                        loadAllPackages();
+                    }, 500);
+                }, 1000);
             } else {
                 // No user is signed in. Redirect to login page.
                 console.log('User is not logged in. Redirecting...');
@@ -110,18 +405,52 @@
             }
         });
 
-        // --- LOGOUT BUTTON ---
-        document.getElementById('logout-button').addEventListener('click', () => {
-            auth.signOut().then(() => {
-                console.log('User signed out successfully.');
-                // Sign-out successful. Redirect is handled by onAuthStateChanged.
-            }).catch((error) => {
-                console.error('Sign out error:', error);
-                Swal.fire('ผิดพลาด', 'ไม่สามารถออกจากระบบได้', 'error');
+        // Add fadeOut animation
+        const fadeOutStyle = document.createElement('style');
+        fadeOutStyle.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(fadeOutStyle);
+
+        // --- ENHANCED LOGOUT BUTTON ---
+        document.getElementById('logout-button').addEventListener('click', (e) => {
+            createRippleEffect(e.target, e);
+            
+            Swal.fire({
+                title: 'ออกจากระบบ?',
+                text: 'คุณต้องการออกจากระบบหรือไม่?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'ออกจากระบบ',
+                cancelButtonText: 'ยกเลิก',
+                background: 'rgba(17, 24, 39, 0.95)',
+                color: '#E5E7EB'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    auth.signOut().then(() => {
+                        console.log('User signed out successfully.');
+                        // Add logout animation
+                        document.body.style.animation = 'fadeOut 0.5s ease-out forwards';
+                    }).catch((error) => {
+                        console.error('Sign out error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'ผิดพลาด',
+                            text: 'ไม่สามารถออกจากระบบได้',
+                            background: 'rgba(17, 24, 39, 0.95)',
+                            color: '#E5E7EB'
+                        });
+                    });
+                }
             });
         });
 
-        // --- DATA & RENDERING LOGIC (FROM PREVIOUS STEP, NO CHANGES NEEDED) ---
+        // --- DATA & RENDERING LOGIC (ENHANCED WITH ANIMATIONS) ---
         const mainContainer = document.getElementById('main-packages-container');
         const callContainer = document.getElementById('call-packages-container');
         const textContainer = document.getElementById('text-packages-container');
@@ -129,7 +458,7 @@
 
         function renderFormGroup(docId, pkg, type) {
             const div = document.createElement('div');
-            div.className = 'form-group';
+            div.className = 'form-group interactive-element';
             div.dataset.id = docId;
             div.dataset.type = type;
 
@@ -151,35 +480,53 @@
                 <form onsubmit="event.preventDefault(); savePackage('${docId}', '${type}')">
                     ${fieldsHtml}
                     <div class="flex gap-4 mt-4">
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
-                        <button type="button" class="btn btn-danger" onclick="deletePackage('${docId}', '${type}')">ลบ</button>
+                        <button type="submit" class="btn btn-primary interactive-element">บันทึก</button>
+                        <button type="button" class="btn btn-danger interactive-element" onclick="deletePackage('${docId}', '${type}')">ลบ</button>
                     </div>
                 </form>
             `;
+            
+            // Add click event listeners for ripple effect
+            div.querySelectorAll('.interactive-element').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    createRippleEffect(element, e);
+                });
+            });
+            
             return div;
         }
 
         async function loadAllPackages() {
-            // Function to load data from Firestore (no changes from before)
             try {
                 const mainSnapshot = await db.collection('mainPackages').get();
                 mainContainer.innerHTML = '';
-                mainSnapshot.forEach(doc => mainContainer.appendChild(renderFormGroup(doc.id, doc.data(), 'mainPackages')));
+                mainSnapshot.forEach((doc, index) => {
+                    const formGroup = renderFormGroup(doc.id, doc.data(), 'mainPackages');
+                    formGroup.style.animationDelay = `${index * 0.1}s`;
+                    mainContainer.appendChild(formGroup);
+                });
 
                 const addOnSnapshot = await db.collection('addOnPackages').get();
                 addOnContainer.innerHTML = '';
-                addOnSnapshot.forEach(doc => addOnContainer.appendChild(renderFormGroup(doc.id, doc.data(), 'addOnPackages')));
-                
-                // Other package loading logic...
+                addOnSnapshot.forEach((doc, index) => {
+                    const formGroup = renderFormGroup(doc.id, doc.data(), 'addOnPackages');
+                    formGroup.style.animationDelay = `${index * 0.1}s`;
+                    addOnContainer.appendChild(formGroup);
+                });
 
             } catch (error) {
                 console.error("Error loading packages: ", error);
-                Swal.fire('Error!', 'ไม่สามารถโหลดข้อมูลจาก Firebase ได้', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'ไม่สามารถโหลดข้อมูลจาก Firebase ได้',
+                    background: 'rgba(17, 24, 39, 0.95)',
+                    color: '#E5E7EB'
+                });
             }
         }
         
         async function savePackage(docId, type) {
-            // Save logic (no changes from before)
             const formContainer = document.querySelector(`[data-id='${docId}']`);
             const inputs = formContainer.querySelectorAll('input, textarea');
             const dataToSave = {};
@@ -188,53 +535,128 @@
             });
 
             try {
+                // Add saving animation
+                formContainer.style.animation = 'pulse 0.5s ease-out';
+                
                 await db.collection(type).doc(docId).update(dataToSave);
-                Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
+                
+                // Success animation
+                formContainer.classList.add('success-flash');
+                setTimeout(() => formContainer.classList.remove('success-flash'), 500);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สำเร็จ!',
+                    text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    background: 'rgba(17, 24, 39, 0.95)',
+                    color: '#E5E7EB'
+                });
+                
                 formContainer.querySelector('h4').textContent = dataToSave.name;
             } catch (error) {
                 console.error("Error saving package: ", error);
-                Swal.fire('ผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ผิดพลาด!',
+                    text: 'ไม่สามารถบันทึกข้อมูลได้',
+                    background: 'rgba(17, 24, 39, 0.95)',
+                    color: '#E5E7EB'
+                });
             }
         }
 
         async function addPackageForm(type) {
-            // Add logic (no changes from before)
             const defaultData = { name: 'แพ็กเกจใหม่', price: '0 บาท', description: 'คำอธิบาย...'};
             try {
                 const docRef = await db.collection(type).add(defaultData);
                 const newForm = renderFormGroup(docRef.id, defaultData, type);
+                
+                // Add entrance animation
+                newForm.style.animation = 'slideInUp 0.6s ease-out forwards';
+                newForm.style.opacity = '0';
+                newForm.style.transform = 'translateY(20px)';
                 
                 if(type === 'mainPackages') mainContainer.appendChild(newForm);
                 else if (type === 'addOnPackages') addOnContainer.appendChild(newForm);
 
             } catch (error) {
                  console.error("Error adding package: ", error);
-                Swal.fire('ผิดพลาด!', 'ไม่สามารถเพิ่มแพ็กเกจได้', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ผิดพลาด!',
+                    text: 'ไม่สามารถเพิ่มแพ็กเกจได้',
+                    background: 'rgba(17, 24, 39, 0.95)',
+                    color: '#E5E7EB'
+                });
             }
         }
 
         async function deletePackage(docId, type) {
-            // Delete logic (no changes from before)
             const result = await Swal.fire({
                 title: 'ต้องการลบใช่หรือไม่?',
                 text: "ข้อมูลจะถูกลบถาวรจากฐานข้อมูล!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonText: 'ยกเลิก'
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก',
+                background: 'rgba(17, 24, 39, 0.95)',
+                color: '#E5E7EB'
             });
 
             if (result.isConfirmed) {
                 try {
+                    const formContainer = document.querySelector(`[data-id='${docId}']`);
+                    
+                    // Add deletion animation
+                    formContainer.style.animation = 'slideOutUp 0.5s ease-in forwards';
+                    
                     await db.collection(type).doc(docId).delete();
-                    document.querySelector(`[data-id='${docId}']`).remove();
-                    Swal.fire('สำเร็จ!', 'ลบข้อมูลเรียบร้อย', 'success');
+                    
+                    setTimeout(() => {
+                        formContainer.remove();
+                    }, 500);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: 'ลบข้อมูลเรียบร้อย',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: 'rgba(17, 24, 39, 0.95)',
+                        color: '#E5E7EB'
+                    });
                 } catch (error) {
                     console.error("Error deleting package: ", error);
-                    Swal.fire('ผิดพลาด!', 'ไม่สามารถลบข้อมูลได้', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ผิดพลาด!',
+                        text: 'ไม่สามารถลบข้อมูลได้',
+                        background: 'rgba(17, 24, 39, 0.95)',
+                        color: '#E5E7EB'
+                    });
                 }
             }
         }
+
+        // Add slide out animation
+        const slideOutStyle = document.createElement('style');
+        slideOutStyle.textContent = `
+            @keyframes slideOutUp {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+            }
+        `;
+        document.head.appendChild(slideOutStyle);
     </script>
 </body>
 </html>
