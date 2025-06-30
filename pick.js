@@ -367,56 +367,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- [FIXED] RENDER DECK FUNCTION FOR 4 ROWS LAYOUT ---
+    // --- [ENHANCED] RENDER DECK FUNCTION FOR RESPONSIVE STAGGERED LAYOUT ---
     function renderDeck() {
         cardGrid.innerHTML = ''; 
         const shuffledDeck = shuffle([...tarotDeck]);
         const containerWidth = cardGrid.offsetWidth;
 
-        // --- กำหนดให้แสดงใน 4 แถวเท่านั้น ---
-        const totalRows = 4;
-        const totalCards = shuffledDeck.length; // 78 ใบ
-        const cardsPerRow = Math.ceil(totalCards / totalRows); // ประมาณ 20 ใบต่อแถว
-
+        // --- ค่าที่ปรับได้สำหรับ Layout ---
+        const cardsPerRow = 19;
         let cardWidth, overlapX, rowHeight;
 
         // --- กำหนดค่าตามขนาดหน้าจอ ---
         if (containerWidth < 768) { // Mobile
-            cardWidth = Math.min(containerWidth / 12, 45); // ลดขนาดไพ่ในมือถือ
-            overlapX = cardWidth * 0.6; // เพิ่มการทับซ้อน
-            rowHeight = cardWidth * (3/2) * 0.7;
+            cardWidth = containerWidth / 8;
+            overlapX = cardWidth * 0.4;
+            rowHeight = cardWidth * (3/2) * 0.6;
         } else { // Desktop
-            cardWidth = Math.min(containerWidth / cardsPerRow * 0.8, 70); // ปรับขนาดตามความกว้างของหน้าจอ
-            overlapX = cardWidth * 0.7; // การทับซ้อนที่เหมาะสม
-            rowHeight = cardWidth * (3/2) * 0.8;
+            cardWidth = 90;
+            overlapX = 40;
+            rowHeight = 150;
         }
 
-        // คำนวณความกว้างรวมของแต่ละแถว
         const totalRowWidth = (cardsPerRow - 1) * overlapX + cardWidth;
-        const startOffset = Math.max(0, (containerWidth - totalRowWidth) / 2);
-
-        // กำหนดความสูงรวมของ container
-        const totalHeight = totalRows * rowHeight + 100; // เพิ่ม padding
-        cardGrid.style.minHeight = `${totalHeight}px`;
+        const startOffset = (containerWidth - totalRowWidth) / 2;
 
         shuffledDeck.forEach((card, index) => {
             const cardContainer = document.createElement('div');
             cardContainer.className = 'card-container interactive-feedback';
             cardContainer.dataset.id = card.id;
 
-            // คำนวณตำแหน่งแถวและคอลัมน์
             const row = Math.floor(index / cardsPerRow);
             const col = index % cardsPerRow;
 
-            // คำนวณตำแหน่ง
-            const top = row * rowHeight + 20; // เพิ่ม margin ด้านบน
+            const top = row * rowHeight;
             const left = startOffset + (col * overlapX);
             
             cardContainer.style.width = `${cardWidth}px`;
             cardContainer.style.top = `${top}px`;
             cardContainer.style.left = `${left}px`;
-            cardContainer.style.zIndex = col; // ไพ่ด้านขวาอยู่ด้านบน
-            cardContainer.style.animationDelay = `${index * 20}ms`; // เร็วขึ้นเล็กน้อย
+            cardContainer.style.zIndex = col;
+            cardContainer.style.animationDelay = `${index * 30}ms`; // Slower stagger
 
             const cardBack = document.createElement('div');
             cardBack.className = 'card-back';
@@ -511,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-    } 
+    }
 
     if(saveImageBtn) {
         saveImageBtn.addEventListener('click', saveResultsAsImage);
