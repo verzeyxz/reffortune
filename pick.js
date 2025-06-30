@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-    }
+    } 
 
     if(saveImageBtn) {
         saveImageBtn.addEventListener('click', saveResultsAsImage);
